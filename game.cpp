@@ -142,11 +142,13 @@ void Game::SetupGameWorld(void)
     collectible_entity_tex_ = tex_[tex_collectible];
     enemy_entity_tex_ = tex_[tex_enemy];
     entity_explosion_tex_ = tex_[tex_explosion];
+	collectible_key_tex_ = tex_[tex_key];
     projectile_tex_ = tex_[tex_projectile];
 
     //Generate the collectibles)(5)
     for (int i = 0;i < 5;i++) {
         SpawnEntity('C');
+		SpawnEntity('K');
     }
 }
 
@@ -592,7 +594,10 @@ void Game::SpawnEntity(char type)
 
 
     //Logic to check which entity to generate(C used to be the enemies from last assignment but were revamped into E)
-    if (type == 'C') {
+    if (type == 'K') {
+        GameObject* key_piece = new CollectibleGameObject(glm::vec3(x, y, 0.0f), sprite_, &sprite_shader_, collectible_key_tex_, entity_explosion_tex_, 1);
+        game_objects_.insert(game_objects_.end() - 1, key_piece);
+    } else if (type == 'C') {
         GameObject* entity = new CollectibleGameObject(glm::vec3(x, y, 0.0f), sprite_, &sprite_shader_, collectible_entity_tex_, entity_explosion_tex_, 1);
         game_objects_.insert(game_objects_.end() - 1, entity);
     }

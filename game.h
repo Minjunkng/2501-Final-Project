@@ -51,6 +51,7 @@ namespace game {
             GLuint collectible_entity_tex_;
             GLuint enemy_entity_tex_;
             GLuint entity_explosion_tex_;
+			GLuint collectible_key_tex_;
             GLuint projectile_tex_;
             void SpawnEntity(char);
 
