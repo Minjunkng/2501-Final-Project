@@ -11,6 +11,7 @@
 #include "shader.h"
 #include "player_game_object.h"
 #include "collectible_game_object.h"
+#include "collectible_game_object_gun.h"
 #include "enemy_game_object.h"
 #include "game.h"
 #include "projectile_object.h"
@@ -62,7 +63,8 @@ void Game::SetupGameWorld(void)
 		tex_transparent = 9,
 		tex_sky = 10,
         tex_blade = 11,
-		tex_snow = 12
+		tex_snow = 12,
+        tex_howl = 13
          };
     // Add the textures in the same order as the enum above
     textures.push_back("/textures/airplane.png"); 
@@ -78,6 +80,7 @@ void Game::SetupGameWorld(void)
     textures.push_back("/textures/tileable_sky.jpg");
     textures.push_back("/textures/blade.png");
     textures.push_back("/textures/snow.png");
+    textures.push_back("/textures/howl.png");
     // Load all the textures
     LoadTextures(textures);
 
@@ -119,6 +122,9 @@ void Game::SetupGameWorld(void)
     );
 
     game_objects_.push_back(snow_particles_);
+
+    GameObject* gun = new CollectibleGameObject(glm::vec3(2.0f, 0.0f, 0.0f), sprite_, &sprite_shader_, tex_[tex_howl], tex_[tex_explosion], 1);
+    game_objects_.push_back(gun);
 
     // Setup background
     // In this specific implementation, the background is always the
