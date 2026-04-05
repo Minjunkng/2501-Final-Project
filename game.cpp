@@ -132,6 +132,10 @@ void Game::SetupGameWorld(void)
     GameObject* gun = new CollectibleGameObjectGun(glm::vec3(2.0f, 0.0f, 0.0f), sprite_, &sprite_shader_, tex_[tex_howl], tex_[tex_explosion], 1);
     game_objects_.push_back(gun);
 
+    // Create UI
+    GameObject* circle = new DrawingGameObject(glm::vec3(-2.0f, 1.0f, 0.0f), sprite_, &drawing_shader_, tex_[11]);
+    game_objects_.push_back(circle);
+
     // Setup background
     // In this specific implementation, the background is always the
     // last object
