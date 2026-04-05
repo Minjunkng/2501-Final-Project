@@ -16,6 +16,8 @@ namespace game {
         Player,
         Enemy,
         Collectible,
+		CollectibleGun,
+		CollectibleKey,
         Projectile,
         Wall
     };

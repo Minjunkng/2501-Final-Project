@@ -44,7 +44,7 @@ set(SRCS
 configure_file(path_config.h.in path_config.h)
 
 # Add executable based on the source files
-add_executable(${PROJ_NAME} ${HDRS} ${SRCS} "wall_game_object.cpp" "wall_game_object.h" "particle_system.h" "particle_system.cpp" "blade_game_object.h" "blade_game_object.cpp" "collectible_game_object_gun.cpp" "collectible_game_object_gun.h")
+add_executable(${PROJ_NAME} ${HDRS} ${SRCS} "wall_game_object.cpp" "wall_game_object.h" "particle_system.h" "particle_system.cpp" "blade_game_object.h" "blade_game_object.cpp" "collectible_game_object_gun.cpp" "collectible_game_object_gun.h" "collectible_game_object_key.cpp" "collectible_game_object_key.h")
 
 # Directories to include for header files, so that the compiler can find
 # path_config.h
