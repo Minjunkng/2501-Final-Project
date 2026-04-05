@@ -12,6 +12,7 @@
 #include "player_game_object.h"
 #include "collectible_game_object.h"
 #include "collectible_game_object_gun.h"
+#include "collectible_game_object_key.h"
 #include "enemy_game_object.h"
 #include "game.h"
 #include "projectile_object.h"
@@ -127,7 +128,7 @@ void Game::SetupGameWorld(void)
 
     game_objects_.push_back(snow_particles_);
 
-    GameObject* gun = new CollectibleGameObject(glm::vec3(2.0f, 0.0f, 0.0f), sprite_, &sprite_shader_, tex_[tex_howl], tex_[tex_explosion], 1);
+    GameObject* gun = new CollectibleGameObjectGun(glm::vec3(2.0f, 0.0f, 0.0f), sprite_, &sprite_shader_, tex_[tex_howl], tex_[tex_explosion], 1);
     game_objects_.push_back(gun);
 
     // Setup background
@@ -597,7 +598,7 @@ void Game::SpawnEntity(char type)
 
     //Logic to check which entity to generate(C used to be the enemies from last assignment but were revamped into E)
     if (type == 'K') {
-        GameObject* key_piece = new CollectibleGameObject(glm::vec3(x, y, 0.0f), sprite_, &sprite_shader_, collectible_key_tex_, entity_explosion_tex_, 1);
+        GameObject* key_piece = new CollectibleGameObjectKey(glm::vec3(x, y, 0.0f), sprite_, &sprite_shader_, collectible_key_tex_, entity_explosion_tex_, 1);
         game_objects_.insert(game_objects_.end() - 1, key_piece);
     } else if (type == 'C') {
         GameObject* entity = new CollectibleGameObject(glm::vec3(x, y, 0.0f), sprite_, &sprite_shader_, collectible_entity_tex_, entity_explosion_tex_, 1);
