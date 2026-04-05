@@ -19,6 +19,7 @@
 #include "wall_game_object.h"
 #include "particle_system.h"
 #include "blade_game_object.h"
+#include "drawing_game_object.h"
 
 #include "timer.h"
 
