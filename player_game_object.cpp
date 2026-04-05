@@ -44,14 +44,7 @@ void PlayerGameObject::collide(GameObject* collided_with) {
 			texture_ = invunerable_texture_;
 			invunerable_texture_ = temp;
 		}
-	} else if (collided_with->GetType() == GameObjectType::CollectibleKey) {
-        keys_collected_ += 1;
-        if (keys_collected_ == 3) {
-            ghost_ = true;
         }
-    } else if (collided_with->GetType() == GameObjectType::CollectibleGun) {
-        isFurryEnabled_ = true;
-        isFurry_ = true;
     }
 }
 
