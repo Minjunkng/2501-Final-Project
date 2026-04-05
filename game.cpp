@@ -64,7 +64,8 @@ void Game::SetupGameWorld(void)
 		tex_sky = 10,
         tex_blade = 11,
 		tex_snow = 12,
-        tex_howl = 13
+        tex_howl = 13,
+        tex_key = 14
          };
     // Add the textures in the same order as the enum above
     textures.push_back("/textures/airplane.png"); 
@@ -81,6 +82,7 @@ void Game::SetupGameWorld(void)
     textures.push_back("/textures/blade.png");
     textures.push_back("/textures/snow.png");
     textures.push_back("/textures/howl.png");
+    textures.push_back("/textures/pinkcloud.png");
     // Load all the textures
     LoadTextures(textures);
 
@@ -125,6 +127,9 @@ void Game::SetupGameWorld(void)
 
     GameObject* gun = new CollectibleGameObject(glm::vec3(2.0f, 0.0f, 0.0f), sprite_, &sprite_shader_, tex_[tex_howl], tex_[tex_explosion], 1);
     game_objects_.push_back(gun);
+
+    GameObject* key_piece = new CollectibleGameObject(glm::vec3(1.0f, 0.0f, 0.0f), sprite_, &sprite_shader_, tex_[tex_key], tex_[tex_explosion], 1);
+    game_objects_.push_back(key_piece);
 
     // Setup background
     // In this specific implementation, the background is always the
