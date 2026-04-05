@@ -200,8 +200,11 @@ void Game::HandleControls(double delta_time)
         // Player position in 2D (same plane as mouse)
         glm::vec2 p(curpos.x, curpos.y);
 
+        // Offset mouse position by player position
+        glm::vec2 mousePos(mouse.x + player->GetPosition().x, mouse.y + player->GetPosition().y);
+
         // Direction from player to mouse
-        glm::vec2 d = mouse - p;
+        glm::vec2 d = mousePos - p;
 
         // Avoid NaN when mouse is exactly on player
         if (glm::length(d) > 0.0001f) {
