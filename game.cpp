@@ -128,9 +128,6 @@ void Game::SetupGameWorld(void)
     GameObject* gun = new CollectibleGameObject(glm::vec3(2.0f, 0.0f, 0.0f), sprite_, &sprite_shader_, tex_[tex_howl], tex_[tex_explosion], 1);
     game_objects_.push_back(gun);
 
-    GameObject* key_piece = new CollectibleGameObject(glm::vec3(1.0f, 0.0f, 0.0f), sprite_, &sprite_shader_, tex_[tex_key], tex_[tex_explosion], 1);
-    game_objects_.push_back(key_piece);
-
     // Setup background
     // In this specific implementation, the background is always the
     // last object
