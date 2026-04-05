@@ -89,6 +89,9 @@ namespace game {
             // Shader for rendering sprites in the scene
             Shader sprite_shader_;
 
+            // Shader for rendering UI
+            Shader drawing_shader_;
+
             // References to textures
             // This needs to be a pointer
             GLuint *tex_;

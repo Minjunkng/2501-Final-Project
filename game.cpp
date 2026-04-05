@@ -495,6 +495,9 @@ void Game::Init(void)
     // Initialize sprite shader
     sprite_shader_.Init((resources_directory_g+std::string("/sprite_vertex_shader.glsl")).c_str(), (resources_directory_g+std::string("/sprite_fragment_shader.glsl")).c_str());
 
+    // Initialize drawing shader
+    drawing_shader_.Init((resources_directory_g+std::string("/sprite_vertex_shader.glsl")).c_str(), (resources_directory_g+std::string("/drawing_fragment_shader.glsl")).c_str());
+
     // Initialize time
     current_time_ = 0.0;
 
