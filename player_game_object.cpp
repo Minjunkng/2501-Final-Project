@@ -11,6 +11,9 @@ namespace game {
 PlayerGameObject::PlayerGameObject(const glm::vec3 &position, Geometry *geom, Shader *shader, GLuint texture, GLuint destroy_texture, int hit_points, GLuint invunerable_texture)
     : GameObject(position, geom, shader, texture, destroy_texture, hit_points),
       items_collected_(0),
+      keys_collected_(0),
+      isFurryEnabled_(0),
+      isFurry_(0),
       invincible_(false),
       invunerable_texture_(invunerable_texture),
       velocity_(0.0f, 0.0f, 0.0f),
@@ -31,10 +34,7 @@ void PlayerGameObject::collide(GameObject* collided_with) {
 
         timer_.Start(5);
     } else if (collided_with->GetType() == GameObjectType::Collectible) {
-		items_collected_ += 1;
-        if (items_collected_ == 3) {
-            ghost_ = true;
-        }
+        items_collected_ += 1;
 		if (items_collected_ == 5) {
 			invincible_ = true;
 			items_collected_ = 0;
@@ -44,7 +44,30 @@ void PlayerGameObject::collide(GameObject* collided_with) {
 			texture_ = invunerable_texture_;
 			invunerable_texture_ = temp;
 		}
-	}
+	} else if (collided_with->GetType() == GameObjectType::CollectibleKey) {
+        keys_collected_ += 1;
+        if (keys_collected_ == 3) {
+            ghost_ = true;
+        }
+    } else if (collided_with->GetType() == GameObjectType::CollectibleGun) {
+        isFurryEnabled_ = true;
+        isFurry_ = true;
+    }
+}
+
+bool PlayerGameObject::isFurry() {
+    if (isFurryEnabled_) {
+        return true;
+    }
+    return false;
+}
+
+void PlayerGameObject::FurryToggle() {
+    if (isFurry_) {
+        isFurry_ = false;
+    } else {
+		isFurry_ = true;
+    }
 }
 
 void PlayerGameObject::Update(double delta_time) {

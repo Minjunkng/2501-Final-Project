@@ -19,13 +19,21 @@ namespace game {
 
             void Jump(const glm::vec3& impulse);
 
+            bool isFurry();
+
+            void FurryToggle();
+
             GameObjectType GetType(void) override;
         private:
             int items_collected_;
+            int keys_collected_;
             bool invincible_;
             GLuint invunerable_texture_;
 
             glm::vec3 velocity_;
+
+            bool isFurryEnabled_;
+            bool isFurry_;
 
             bool in_air_;
             float gravity_;
