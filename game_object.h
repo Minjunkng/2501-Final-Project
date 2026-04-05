@@ -19,7 +19,8 @@ namespace game {
 		CollectibleGun,
 		CollectibleKey,
         Projectile,
-        Wall
+        Wall,
+        Drawing
     };
 
     /*

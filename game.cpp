@@ -18,6 +18,8 @@
 #include "wall_game_object.h"
 #include "particle_system.h"
 #include "blade_game_object.h"
+#include "drawing_game_object.h"
+#include "user_interface_object.h"
 
 #include "timer.h"
 
@@ -65,7 +67,8 @@ void Game::SetupGameWorld(void)
         tex_blade = 11,
 		tex_snow = 12,
         tex_howl = 13,
-        tex_key = 14
+        tex_key = 14,
+        tex_heart = 15
          };
     // Add the textures in the same order as the enum above
     textures.push_back("/textures/airplane.png"); 
@@ -83,6 +86,7 @@ void Game::SetupGameWorld(void)
     textures.push_back("/textures/snow.png");
     textures.push_back("/textures/howl.png");
     textures.push_back("/textures/pinkcloud.png");
+    textures.push_back("/textures/heart.png");
     // Load all the textures
     LoadTextures(textures);
 
@@ -127,6 +131,10 @@ void Game::SetupGameWorld(void)
 
     GameObject* gun = new CollectibleGameObject(glm::vec3(2.0f, 0.0f, 0.0f), sprite_, &sprite_shader_, tex_[tex_howl], tex_[tex_explosion], 1);
     game_objects_.push_back(gun);
+
+    // Draw UI
+    DrawingGameObject* drawing = new DrawingGameObject(glm::vec3(0.0f, 3.0f, 0.0f), sprite_, &drawing_shader_, tex_[3], -1);
+    game_objects_.push_back(drawing);
 
     // Setup background
     // In this specific implementation, the background is always the
@@ -197,8 +205,11 @@ void Game::HandleControls(double delta_time)
         // Player position in 2D (same plane as mouse)
         glm::vec2 p(curpos.x, curpos.y);
 
+        // Offset mouse position by player position
+        glm::vec2 mousePos(mouse.x + player->GetPosition().x, mouse.y + player->GetPosition().y);
+
         // Direction from player to mouse
-        glm::vec2 d = mouse - p;
+        glm::vec2 d = mousePos - p;
 
         // Avoid NaN when mouse is exactly on player
         if (glm::length(d) > 0.0001f) {
@@ -488,6 +499,9 @@ void Game::Init(void)
     // Initialize sprite shader
     sprite_shader_.Init((resources_directory_g+std::string("/sprite_vertex_shader.glsl")).c_str(), (resources_directory_g+std::string("/sprite_fragment_shader.glsl")).c_str());
 
+    // Initialize drawing shader
+    drawing_shader_.Init((resources_directory_g + std::string("/sprite_vertex_shader.glsl")).c_str(), (resources_directory_g + std::string("/drawing_fragment_shader.glsl")).c_str());
+    
     // Initialize time
     current_time_ = 0.0;
 
