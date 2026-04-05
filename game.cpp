@@ -268,7 +268,8 @@ void Game::HandleControls(double delta_time)
 
         // Create projectile
         ProjectileObject* projectile = new ProjectileObject(spawn_pos, sprite_, &sprite_shader_, projectile_tex_, direction);
-
+        // Rotate in direction of shooting
+        projectile->SetRotation(player->GetRotation() + (270 * glm::pi<float>() / 180));
         game_objects_.insert(game_objects_.end() - 1, projectile);
     }
 }
