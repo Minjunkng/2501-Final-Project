@@ -9,7 +9,7 @@ namespace game {
     class PlayerGameObject : public GameObject {
 
         public:
-            PlayerGameObject(const glm::vec3 &position, Geometry *geom, Shader *shader, GLuint texture, GLuint destroy_texture, int hit_points, GLuint invunerable_texture);
+            PlayerGameObject(const glm::vec3 &position, Geometry *geom, Shader *shader, GLuint texture, GLuint destroy_texture, int hit_points, GLuint invunerable_texture, GLuint furry_texture, GLuint alpha_furry_texture);
 
             // Update function for moving the player object around
             void Update(double delta_time) override;
@@ -29,6 +29,8 @@ namespace game {
             int keys_collected_;
             bool invincible_;
             GLuint invunerable_texture_;
+            GLuint dog_texture_;
+            GLuint dog_invunerable_texture_;
 
             glm::vec3 velocity_;
 

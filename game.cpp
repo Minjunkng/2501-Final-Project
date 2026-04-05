@@ -65,7 +65,8 @@ void Game::SetupGameWorld(void)
         tex_blade = 11,
 		tex_snow = 12,
         tex_howl = 13,
-        tex_key = 14
+        tex_key = 14,
+		tex_fenrir = 15
          };
     // Add the textures in the same order as the enum above
     textures.push_back("/textures/airplane.png"); 
@@ -83,6 +84,7 @@ void Game::SetupGameWorld(void)
     textures.push_back("/textures/snow.png");
     textures.push_back("/textures/howl.png");
     textures.push_back("/textures/pinkcloud.png");
+    textures.push_back("/textures/fenrir_wolf.png");
     // Load all the textures
     LoadTextures(textures);
 
@@ -93,7 +95,7 @@ void Game::SetupGameWorld(void)
     // Note that, in this specific implementation, the player object should always be the first object in the game object vector 
     //
     // Create the player object
-    PlayerGameObject *player = new PlayerGameObject(glm::vec3(-2.5f, 0.0f, 0.0f), sprite_, &sprite_shader_, tex_[tex_chopper], tex_[tex_explosion],3, tex_[tex_invunerable]);
+    PlayerGameObject *player = new PlayerGameObject(glm::vec3(-2.5f, 0.0f, 0.0f), sprite_, &sprite_shader_, tex_[tex_chopper], tex_[tex_explosion],3, tex_[tex_invunerable], tex_[tex_howl], tex_[tex_fenrir]);
     // Add the player to the list of all game objects in the game
     game_objects_.push_back(player);
     // Make the object larger

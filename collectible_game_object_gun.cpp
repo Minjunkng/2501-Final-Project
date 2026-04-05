@@ -33,7 +33,7 @@ namespace game {
 	}
 
 	GameObjectType  CollectibleGameObjectGun::GetType() {
-		return GameObjectType::CollectibleKey;
+		return GameObjectType::CollectibleGun;
 	}
 
 } // namespace game

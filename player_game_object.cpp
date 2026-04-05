@@ -8,7 +8,7 @@ namespace game {
 	It overrides GameObject's update method, so that you can check for input to change the velocity of the player
 */
 
-PlayerGameObject::PlayerGameObject(const glm::vec3 &position, Geometry *geom, Shader *shader, GLuint texture, GLuint destroy_texture, int hit_points, GLuint invunerable_texture)
+PlayerGameObject::PlayerGameObject(const glm::vec3 &position, Geometry *geom, Shader *shader, GLuint texture, GLuint destroy_texture, int hit_points, GLuint invunerable_texture, GLuint furry_texture, GLuint alpha_furry_texture)
     : GameObject(position, geom, shader, texture, destroy_texture, hit_points),
       items_collected_(0),
       keys_collected_(0),
@@ -16,12 +16,16 @@ PlayerGameObject::PlayerGameObject(const glm::vec3 &position, Geometry *geom, Sh
       isFurry_(0),
       invincible_(false),
       invunerable_texture_(invunerable_texture),
+      dog_texture_(furry_texture),
+      dog_invunerable_texture_(alpha_furry_texture),
       velocity_(0.0f, 0.0f, 0.0f),
       in_air_(true),
       gravity_(-9.8f),
       restitution_(0.5f),
       ground_height_(-2.1f),
       stop_threshold_(0.3f) {}
+      
+      
 
 //Collide function is overridden to make sure that there is no invunerability window so that if you hit 3 in x time, it will always register 3.
 void PlayerGameObject::collide(GameObject* collided_with) {
@@ -33,19 +37,46 @@ void PlayerGameObject::collide(GameObject* collided_with) {
         }
 
         timer_.Start(5);
-    } else if (collided_with->GetType() == GameObjectType::Collectible) {
+    }
+    else if (collided_with->GetType() == GameObjectType::CollectibleKey) {
+        keys_collected_ += 1;
+        if (keys_collected_ == 1) {
+            ghost_ = true;
+        }
+    }
+    else if (collided_with->GetType() == GameObjectType::CollectibleGun) {
+        isFurryEnabled_ = true;
+        isFurry_ = true;
+
+        GLuint temp = texture_;
+        texture_ = dog_texture_;
+        dog_texture_ = temp;
+    }
+    else if (collided_with->GetType() == GameObjectType::Collectible) {
         items_collected_ += 1;
 		if (items_collected_ == 5) {
 			invincible_ = true;
 			items_collected_ = 0;
 			timer_.Start(10);
 
-			GLuint temp = texture_;
-			texture_ = invunerable_texture_;
-			invunerable_texture_ = temp;
+            if (isFurryEnabled_) {
+                if (isFurry_) {
+                    GLuint temp = texture_;
+                    texture_ = dog_invunerable_texture_;
+                    invunerable_texture_ = temp;
+                }
+                else {
+                    GLuint temp = texture_;
+                    texture_ = invunerable_texture_;
+                    invunerable_texture_ = temp;
+                }
+            } else {
+                GLuint temp = texture_;
+                texture_ = invunerable_texture_;
+                invunerable_texture_ = temp;
+			}
 		}
-        }
-    }
+	}
 }
 
 bool PlayerGameObject::isFurry() {
@@ -61,6 +92,9 @@ void PlayerGameObject::FurryToggle() {
     } else {
 		isFurry_ = true;
     }
+    GLuint temp = texture_;
+    texture_ = dog_texture_;
+    dog_texture_ = temp;
 }
 
 void PlayerGameObject::Update(double delta_time) {

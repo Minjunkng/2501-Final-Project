@@ -1,0 +1,5 @@
+source:
+https://opengameart.org/content/fenrir-wolf-pixel-sprite
+
+license:
+CC-BY-SA 3.0
