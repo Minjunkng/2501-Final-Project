@@ -43,6 +43,9 @@ namespace game {
             float restitution_;
             float ground_height_;
             float stop_threshold_;
+
+            GLuint base_texture_;
+            void UpdateTexture();
     }; // class PlayerGameObject
 
 
