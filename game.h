@@ -69,6 +69,8 @@ namespace game {
 
             Timer toggle_timer_;
 
+            Timer game_timer_;
+
             void HandleCollision(GameObject* a, GameObject* b);
             bool Game::RayCircleIntersect(
                 float ox, float oy,     // ray origin

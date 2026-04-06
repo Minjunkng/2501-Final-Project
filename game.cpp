@@ -334,7 +334,7 @@ void Game::Update(double delta_time)
         }
     }
     //If the player no longer exits, ends the game
-    if (!player_exists) {
+    if (!player_exists || game_timer_.Finished()) {
         std::cout << "GAME OVER\n" << std::endl;
         glfwSetWindowShouldClose(window_, true);
     }
@@ -526,6 +526,8 @@ void Game::Init(void)
     entity_spawn_timer_.Start(10.0);
 
     snow_spawn_timer_.Start(3.0);
+
+    game_timer_.Start(60.0);
 }
 
 
