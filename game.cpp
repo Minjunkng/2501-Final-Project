@@ -624,7 +624,7 @@ void Game::SpawnEntity(char type)
     }
 
     float x = RandFloat(-halfW + 0.5f, halfW - 0.5f);
-    float y = RandFloat(-halfH + 0.5f, halfH - 0.5f);
+    float y = RandFloat(-halfH + 0.5f, halfH - 2.5f);
 
 
     //Logic to check which entity to generate(C used to be the enemies from last assignment but were revamped into E)
@@ -794,9 +794,7 @@ void Game::HandleCollision(GameObject* a, GameObject* b) {
                 entity_explosion_tex_
             );
 
-            std::cout << "Active Game Objects: " << game_objects_.size() << std::endl;
             game_objects_.insert(game_objects_.end() - 1, explosion);
-            std::cout << "Active Game Objects1: " << game_objects_.size() << std::endl;
         }
 
         // Case 2: b = enemy, a = player
@@ -812,9 +810,7 @@ void Game::HandleCollision(GameObject* a, GameObject* b) {
                 entity_explosion_tex_
             );
 
-            std::cout << "Active Game Objects: " << game_objects_.size() << std::endl;
             game_objects_.insert(game_objects_.end() - 1, explosion);
-            std::cout << "Active Game Objects1: " << game_objects_.size() << std::endl;
         }
 
         a->collide(b);
