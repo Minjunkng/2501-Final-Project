@@ -269,11 +269,17 @@ void Game::HandleControls(double delta_time)
         // Direction the player is currently facing (already updated by mouse aim)
         glm::vec3 direction = player->GetBearing();
 
-        // Create projectile
-        ProjectileObject* projectile = new ProjectileObject(spawn_pos, sprite_, &sprite_shader_, projectile_tex_, direction);
-        // Rotate in direction of shooting
-        projectile->SetRotation(player->GetRotation() + (270 * glm::pi<float>() / 180));
-        game_objects_.insert(game_objects_.end() - 1, projectile);
+        if (player->isFurry()) {
+            ProjectileObject* projectile = new ProjectileObject(spawn_pos, sprite_, &sprite_shader_, projectile_tex_, direction);
+            projectile->SetRotation(player->GetRotation() + (270 * glm::pi<float>() / 180));
+            projectile->SetSpeed(12.0f); // faster speed when powered up
+            game_objects_.insert(game_objects_.end() - 1, projectile);
+        }
+        else {
+            ProjectileObject* projectile = new ProjectileObject(spawn_pos, sprite_, &sprite_shader_, tex_diamond_red_, direction);
+            projectile->SetRotation(player->GetRotation() + (270 * glm::pi<float>() / 180));
+            game_objects_.insert(game_objects_.end() - 1, projectile);
+        }
     }
 }
 
