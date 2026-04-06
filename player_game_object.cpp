@@ -86,6 +86,10 @@ bool PlayerGameObject::isFurry() {
     return false;
 }
 
+bool PlayerGameObject::CurrentFurry() {
+	return isFurry_;
+}
+
 void PlayerGameObject::FurryToggle() {
     if (isFurry_) {
         isFurry_ = false;

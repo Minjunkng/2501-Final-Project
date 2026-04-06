@@ -20,6 +20,7 @@ namespace game {
             void Jump(const glm::vec3& impulse);
 
             bool isFurry();
+            bool CurrentFurry();
 
             void FurryToggle();
 

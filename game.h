@@ -67,6 +67,8 @@ namespace game {
             float world_width_ = 50.0f;   // width of snow spawn area
             float world_height_ = 25.0f;
 
+            Timer toggle_timer_;
+
             void HandleCollision(GameObject* a, GameObject* b);
             bool Game::RayCircleIntersect(
                 float ox, float oy,     // ray origin

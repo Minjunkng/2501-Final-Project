@@ -258,6 +258,14 @@ void Game::HandleControls(double delta_time)
         player->SetRotation(angle - angle_increment);
     }
 
+    if (glfwGetKey(window_, GLFW_KEY_P) == GLFW_PRESS) {
+        if (player->isFurry() && toggle_timer_.Finished()) {
+			player->FurryToggle();
+
+			toggle_timer_.Start(0.5);
+        }
+    }
+
     if (glfwGetKey(window_, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
         glfwSetWindowShouldClose(window_, true);
     }
@@ -269,7 +277,7 @@ void Game::HandleControls(double delta_time)
         // Direction the player is currently facing (already updated by mouse aim)
         glm::vec3 direction = player->GetBearing();
 
-        if (player->isFurry()) {
+        if (player->CurrentFurry()) {
             ProjectileObject* projectile = new ProjectileObject(spawn_pos, sprite_, &sprite_shader_, projectile_tex_, direction);
             projectile->SetRotation(player->GetRotation() + (270 * glm::pi<float>() / 180));
             projectile->SetSpeed(12.0f); // faster speed when powered up
