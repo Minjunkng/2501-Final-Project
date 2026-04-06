@@ -4,9 +4,12 @@
 
 namespace game {
 
-TextGameObject::TextGameObject(const glm::vec3 &position, Geometry *geom, Shader *shader, GLuint texture) : GameObject(position, geom, shader, texture) {
+TextGameObject::TextGameObject(GameObject* parent, const glm::vec3& offset, Geometry* geom, Shader* shader, GLuint texture) : 
+    GameObject(player->GetPosition(), geom, shader, texture, texture, -1) {
 
     text_ = "";
+    parent_ = parent;
+    offset_ = offset;
 }
 
 
@@ -57,6 +60,13 @@ void TextGameObject::Render(glm::mat4 view_matrix, double current_time) {
 
     // Draw the entity
     glDrawElements(GL_TRIANGLES, geometry_->GetSize(), GL_UNSIGNED_INT, 0);
+}
+
+void TextGameObject::Update(double delta_time) {
+    if (parent_) {
+        glm::vec3 parent_pos = parent_->GetPosition();
+        position_ = parent_pos + offset_;
+    }
 }
 
 

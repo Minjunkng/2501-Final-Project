@@ -71,7 +71,8 @@ void Game::SetupGameWorld(void)
         tex_howl = 13,
         tex_key = 14,
 		tex_fenrir = 15, 
-		tex_diamond_red = 16
+		tex_diamond_red = 16,
+        tex_text_font = 17
          };
     // Add the textures in the same order as the enum above
     textures.push_back("/textures/airplane.png"); 
@@ -91,6 +92,7 @@ void Game::SetupGameWorld(void)
     textures.push_back("/textures/pinkcloud.png");
     textures.push_back("/textures/fenrir_wolf.png");
     textures.push_back("/textures/diamond_red.png");
+    textures.push_back("/textures/text_font.png");
     // Load all the textures
     LoadTextures(textures);
 

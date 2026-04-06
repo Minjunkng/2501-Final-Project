@@ -11,7 +11,7 @@ namespace game {
     class TextGameObject : public GameObject {
 
         public:
-            TextGameObject(const glm::vec3 &position, Geometry *geom, Shader *shader, GLuint texture);
+            TextGameObject(GameObject* player, const glm::vec3 &offset, Geometry *geom, Shader *shader, GLuint texture);
 
             // Text to be displayed
             std::string GetText(void) const;
@@ -20,8 +20,12 @@ namespace game {
             // Render function for the text
             void Render(glm::mat4 view_matrix, double current_time) override;
 
+            void Update(double delta_time) override;
+
         private:
             std::string text_;
+            GameObject* parent_;
+            glm::vec3 offset_;
 
     }; // class TextGameObject
 
