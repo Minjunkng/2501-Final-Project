@@ -17,6 +17,9 @@ set(HDRS
 
     projectile_object.h
 
+    text_game_object.h
+    user_interface_game_object.h
+
     collectible_game_object.h
     enemy_game_object.h
 
@@ -36,8 +39,12 @@ set(SRCS
     enemy_game_object.cpp
     projectile_object.cpp
 
+    text_game_object.cpp
+    user_interface_game_object.cpp
+
     sprite_vertex_shader.glsl
     sprite_fragment_shader.glsl
+    text_fragment_shader.glsl
 )
 
 # Add path name to configuration file

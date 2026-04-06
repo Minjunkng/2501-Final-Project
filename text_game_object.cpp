@@ -2,10 +2,12 @@
 
 #include "text_game_object.h"
 
+#define TEXT_LENGTH 40
+
 namespace game {
 
 TextGameObject::TextGameObject(GameObject* parent, const glm::vec3& offset, Geometry* geom, Shader* shader, GLuint texture) : 
-    GameObject(player->GetPosition(), geom, shader, texture, texture, -1) {
+    GameObject(parent->GetPosition(), geom, shader, texture, texture, -1) {
 
     text_ = "";
     parent_ = parent;
@@ -22,7 +24,7 @@ void TextGameObject::Render(glm::mat4 view_matrix, double current_time) {
     shader_->SetUniformMat4("view_matrix", view_matrix);
 
     // Setup the scaling matrix for the shader
-    glm::mat4 scaling_matrix = glm::scale(glm::mat4(1.0f), glm::vec3(xscale_, yscale_, 1.0));
+    glm::mat4 scaling_matrix = glm::scale(glm::mat4(1.0f), glm::vec3(scale_.x, scale_.y, 1.0));
 
     // Setup the rotation matrix for the shader
     glm::mat4 rotation_matrix = glm::rotate(glm::mat4(1.0f), angle_, glm::vec3(0.0, 0.0, 1.0));
@@ -43,7 +45,6 @@ void TextGameObject::Render(glm::mat4 view_matrix, double current_time) {
     glBindTexture(GL_TEXTURE_2D, texture_);
 
     // Set the text
-#define TEXT_LENGTH 40
     // Set text length
     int final_size = text_.size();
     if (final_size > TEXT_LENGTH){
@@ -68,6 +69,7 @@ void TextGameObject::Update(double delta_time) {
         position_ = parent_pos + offset_;
     }
 }
+
 
 
 std::string TextGameObject::GetText(void) const {
