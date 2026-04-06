@@ -97,6 +97,9 @@ namespace game {
             // Shader for health bar
             Shader health_bar_shader_;
 
+            // Shader for text
+            Shader text_shader;
+
             // References to textures
             // This needs to be a pointer
             GLuint *tex_;
