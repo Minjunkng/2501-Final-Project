@@ -14,6 +14,7 @@
 #include "collectible_game_object_gun.h"
 #include "collectible_game_object_key.h"
 #include "enemy_game_object.h"
+#include "enemy_game_object_stationary.h"
 #include "game.h"
 #include "projectile_object.h"
 #include "wall_game_object.h"
@@ -132,6 +133,9 @@ void Game::SetupGameWorld(void)
 
     GameObject* gun = new CollectibleGameObjectGun(glm::vec3(2.0f, 0.0f, 0.0f), sprite_, &sprite_shader_, tex_[tex_howl], tex_[tex_explosion], 1);
     game_objects_.push_back(gun);
+
+    GameObject* supa = new EnemyGameObjectStationary(glm::vec3(2.0f, 0.0f, 0.0f), sprite_, &sprite_shader_, tex_[tex_fenrir], tex_[tex_explosion], 1);
+    game_objects_.push_back(supa);
 
     // Setup background
     // In this specific implementation, the background is always the
