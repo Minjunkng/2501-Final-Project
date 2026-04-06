@@ -144,7 +144,8 @@ void Game::SetupGameWorld(void)
 
     // Setup UI
     glm::vec3 health_offset = glm::vec3(-4.6f, 3.3f, 0.0f);
-    GameObject* health_bar = new BladeGameObject(player, health_offset, sprite_, &health_bar_shader_, tex_[0], tex_[0], glm::radians(0.0f));
+    GameObject* health_bar = new UserInterfaceGameObject(player, health_offset, sprite_, &health_bar_shader_, tex_[0]);
+    //GameObject* health_bar = new BladeGameObject(player, health_offset, sprite_, &health_bar_shader_, tex_[0], tex_[0], glm::radians(0.0f));
     game_objects_.push_back(health_bar);
     health_bar->SetScale(0.7);
 
