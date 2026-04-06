@@ -136,7 +136,7 @@ void Game::SetupGameWorld(void)
 
     game_objects_.push_back(snow_particles_);
 
-    GameObject* gun = new CollectibleGameObjectGun(glm::vec3(2.0f, 0.0f, 0.0f), sprite_, &sprite_shader_, tex_[tex_howl], tex_[tex_explosion], 1);
+    GameObject* gun = new CollectibleGameObjectGun(glm::vec3(2.0f, -2.0f, 0.0f), sprite_, &sprite_shader_, tex_[tex_howl], tex_[tex_explosion], 1);
     game_objects_.push_back(gun);
 
     GameObject* supa = new EnemyGameObjectStationary(glm::vec3(2.0f, 0.0f, 0.0f), sprite_, &sprite_shader_, tex_[tex_fenrir], tex_[tex_explosion], 1);
@@ -174,7 +174,9 @@ void Game::SetupGameWorld(void)
     //Generate the collectibles)(5)
     for (int i = 0;i < 5;i++) {
         SpawnEntity('C');
-		SpawnEntity('K');
+    }
+    for (int i = 0;i < 3;i++) {
+        SpawnEntity('K');
     }
 }
 
@@ -647,12 +649,12 @@ void Game::SpawnEntity(char type)
     }
 
     float x = RandFloat(-halfW + 0.5f, halfW - 0.5f);
-    float y = RandFloat(-halfH + 0.5f, halfH - 2.5f);
+    float y = RandFloat(-halfH + 0.5f, halfH - 3.0f);
 
 
     //Logic to check which entity to generate(C used to be the enemies from last assignment but were revamped into E)
     if (type == 'K') {
-        GameObject* key_piece = new CollectibleGameObjectKey(glm::vec3(x, 0.5f, 0.0f), sprite_, &sprite_shader_, collectible_key_tex_, entity_explosion_tex_, 1);
+        GameObject* key_piece = new CollectibleGameObjectKey(glm::vec3(x, -0.5f, 0.0f), sprite_, &sprite_shader_, collectible_key_tex_, entity_explosion_tex_, 1);
         game_objects_.insert(game_objects_.end() - 1, key_piece);
     } else if (type == 'C') {
         GameObject* entity = new CollectibleGameObject(glm::vec3(x, y, 0.0f), sprite_, &sprite_shader_, collectible_entity_tex_, entity_explosion_tex_, 1);
@@ -784,9 +786,7 @@ void Game::HandleCollision(GameObject* a, GameObject* b) {
                     200,                    // number of particles
                     entity_explosion_tex_
                 );
-                std::cout << "Active Game Objects: " << game_objects_.size() << std::endl;
 				game_objects_.insert(game_objects_.end() - 1, explosion);
-                std::cout << "Active Game Objects1: " << game_objects_.size() << std::endl;
             }
         }
 

@@ -49,7 +49,7 @@ namespace game {
         }
         else if (collided_with->GetType() == GameObjectType::CollectibleKey) {
             keys_collected_ += 1;
-            if (keys_collected_ == 1) {
+            if (keys_collected_ == 3) {
                 ghost_ = true;
             }
         }
