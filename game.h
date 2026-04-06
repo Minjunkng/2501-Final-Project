@@ -53,6 +53,7 @@ namespace game {
             GLuint entity_explosion_tex_;
 			GLuint collectible_key_tex_;
             GLuint projectile_tex_;
+			GLuint tex_diamond_red_;
             void SpawnEntity(char);
 
             Geometry* particle_geometry_;

@@ -17,6 +17,8 @@ namespace game {
 
         GameObjectType GetType(void) override;
 
+        void SetSpeed(float new_speed);
+
         glm::vec3 GetVelocity() const override;
 
     private:

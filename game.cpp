@@ -67,7 +67,8 @@ void Game::SetupGameWorld(void)
 		tex_snow = 12,
         tex_howl = 13,
         tex_key = 14,
-		tex_fenrir = 15
+		tex_fenrir = 15, 
+		tex_diamond_red = 16
          };
     // Add the textures in the same order as the enum above
     textures.push_back("/textures/airplane.png"); 
@@ -86,6 +87,7 @@ void Game::SetupGameWorld(void)
     textures.push_back("/textures/howl.png");
     textures.push_back("/textures/pinkcloud.png");
     textures.push_back("/textures/fenrir_wolf.png");
+    textures.push_back("/textures/diamond_red.png");
     // Load all the textures
     LoadTextures(textures);
 
@@ -147,6 +149,7 @@ void Game::SetupGameWorld(void)
     entity_explosion_tex_ = tex_[tex_explosion];
 	collectible_key_tex_ = tex_[tex_key];
     projectile_tex_ = tex_[tex_projectile];
+	tex_diamond_red_ = tex_[tex_diamond_red];
 
     //Generate the collectibles)(5)
     for (int i = 0;i < 5;i++) {
@@ -264,9 +267,14 @@ void Game::HandleControls(double delta_time)
         glm::vec3 direction = player->GetBearing();
 
         // Create projectile
-        ProjectileObject* projectile = new ProjectileObject(spawn_pos, sprite_, &sprite_shader_, projectile_tex_, direction);
-
-        game_objects_.insert(game_objects_.end() - 1, projectile);
+        if (player->isFurry()) {
+            ProjectileObject* projectile = new ProjectileObject(spawn_pos, sprite_, &sprite_shader_, projectile_tex_, direction);
+			projectile->SetSpeed(12.0f); // faster speed when powered up
+            game_objects_.insert(game_objects_.end() - 1, projectile);
+        } else {
+            ProjectileObject* projectile = new ProjectileObject(spawn_pos, sprite_, &sprite_shader_, tex_diamond_red_, direction);
+            game_objects_.insert(game_objects_.end() - 1, projectile);
+        }
     }
 }
 

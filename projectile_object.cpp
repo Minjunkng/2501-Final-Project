@@ -38,6 +38,11 @@ namespace game {
         return velocity_;
     }
 
+    void ProjectileObject::SetSpeed(float new_speed) {
+        velocity_ = glm::normalize(velocity_) * new_speed;
+    }
+
+
     void ProjectileObject::collide(GameObject* collided_with) {
         if (collided_with->GetType() == GameObjectType::Enemy) {
             interactable_ = false;

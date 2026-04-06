@@ -1,0 +1,5 @@
+source:
+https://opengameart.org/content/diamond
+
+license:
+CC-BY 4.0
