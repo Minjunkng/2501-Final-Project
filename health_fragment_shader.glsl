@@ -11,7 +11,11 @@ void main()
     vec4 color = vec4(1.0, 0.0, 0.0, 1.0);
     gl_FragColor = color;
 
-    if (max(abs(uv_interp.x) / bar_length, abs(uv_interp.y)) > 0.3){
-         discard;
+    if (bar_length > 0){
+        if (max(abs(uv_interp.x) / bar_length, abs(uv_interp.y)) > 0.3){
+             discard;
+        }
+    }else{
+        discard;
     }
 }

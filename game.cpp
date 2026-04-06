@@ -411,7 +411,7 @@ void Game::Render(void){
         health_bar_shader_.Enable();
 
         // Health bar
-        float player_health;
+        float player_health = 0.0f;
         if (player->getHitPoints() == 3) { player_health = 4.0f; }
         else if (player->getHitPoints() == 2) { player_health = 2.0f; }
         else if (player->getHitPoints() == 1) { player_health = 1.0f; }
