@@ -138,6 +138,9 @@ void Game::SetupGameWorld(void)
     GameObject* supa = new EnemyGameObjectStationary(glm::vec3(2.0f, 0.0f, 0.0f), sprite_, &sprite_shader_, tex_[tex_fenrir], tex_[tex_explosion], 1);
     game_objects_.push_back(supa);
 
+    GameObject* ssupa = new EnemyGameObjectBoxy(glm::vec3(2.0f, 0.0f, 0.0f), sprite_, &sprite_shader_, tex_[tex_fenrir], tex_[tex_explosion], 1);
+    game_objects_.push_back(ssupa);
+
     // Setup background
     // In this specific implementation, the background is always the
     // last object

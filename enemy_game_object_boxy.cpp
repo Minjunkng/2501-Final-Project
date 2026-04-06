@@ -54,7 +54,7 @@ namespace game {
         player_ = player;
     }
 
-    GameObjectType  EnemyGameObjectBoxy::GetType() {
+    GameObjectType EnemyGameObjectBoxy::GetType() {
         return GameObjectType::EnemyBoxy;
     }
 
@@ -74,7 +74,7 @@ namespace game {
         intercept_trigger_radius_ = (r > 0.0f) ? r : 0.0f;
     }
 
-    //Specific intercept time to avoid "blinkfing"
+    //Specific intercept time to avoid "blinking"
     void EnemyGameObjectBoxy::SetDesiredInterceptTime(float seconds) {
         desired_intercept_time_ = (seconds > kMinInterceptTime) ? seconds : kMinInterceptTime;
     }
@@ -124,10 +124,9 @@ namespace game {
     }
 
     void EnemyGameObjectBoxy::PatrolStep(double dt) {
-        // Ellipse parametric motion around patrol_center_:
-        // x = cx + a cos(theta), y = cy + b sin(theta)
-        float a = 0.5f * ellipse_width_;
-        float b = 0.5f * ellipse_height_;
+        // Back-and-forth motion along x-axis
+
+        float amplitude = 0.5f * ellipse_width_; // reuse width as range
 
         theta_ += omega_ * static_cast<float>(dt);
 
@@ -137,9 +136,11 @@ namespace game {
         if (theta_ < 0.0f)   theta_ += two_pi;
 
         glm::vec3 pos = patrol_center_;
-        pos.x += a * std::cos(theta_);
-        pos.y += b * std::sin(theta_);
 
+        // Oscillate only in x
+        pos.x += amplitude * std::sin(theta_);
+
+        // y remains constant
         SetPosition(pos);
     }
 
@@ -156,8 +157,7 @@ namespace game {
         pos += velocity_ * static_cast<float>(dt);
         SetPosition(pos);
 
-        //if very close to target, stop moving (prevents jitter/overshoot)
-        //Cool becuase its tryhard
+        // if very close to target, stop moving (prevents jitter/overshoot)
         if (glm::length2(target_ - pos) <= kDefaultStopRadius * kDefaultStopRadius) {
             velocity_ = glm::vec3(0.0f);
         }
