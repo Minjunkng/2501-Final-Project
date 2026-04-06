@@ -16,7 +16,7 @@ namespace game {
         Player,
         Enemy,
 		EnemyStationary,
-        EnemyNoob,
+        EnemyBoxy,
         Collectible,
 		CollectibleGun,
 		CollectibleKey,
