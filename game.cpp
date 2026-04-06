@@ -15,6 +15,7 @@
 #include "collectible_game_object_key.h"
 #include "enemy_game_object.h"
 #include "enemy_game_object_stationary.h"
+#include "enemy_game_object_boxy.h"
 #include "game.h"
 #include "projectile_object.h"
 #include "wall_game_object.h"
