@@ -203,8 +203,11 @@ void Game::HandleControls(double delta_time)
         // Player position in 2D (same plane as mouse)
         glm::vec2 p(curpos.x, curpos.y);
 
+        // Offset mouse position by player position
+        glm::vec2 mousePos(mouse.x + player->GetPosition().x, mouse.y + player->GetPosition().y);
+
         // Direction from player to mouse
-        glm::vec2 d = mouse - p;
+        glm::vec2 d = mousePos - p;
 
         // Avoid NaN when mouse is exactly on player
         if (glm::length(d) > 0.0001f) {
@@ -267,14 +270,10 @@ void Game::HandleControls(double delta_time)
         glm::vec3 direction = player->GetBearing();
 
         // Create projectile
-        if (player->isFurry()) {
-            ProjectileObject* projectile = new ProjectileObject(spawn_pos, sprite_, &sprite_shader_, projectile_tex_, direction);
-			projectile->SetSpeed(12.0f); // faster speed when powered up
-            game_objects_.insert(game_objects_.end() - 1, projectile);
-        } else {
-            ProjectileObject* projectile = new ProjectileObject(spawn_pos, sprite_, &sprite_shader_, tex_diamond_red_, direction);
-            game_objects_.insert(game_objects_.end() - 1, projectile);
-        }
+        ProjectileObject* projectile = new ProjectileObject(spawn_pos, sprite_, &sprite_shader_, projectile_tex_, direction);
+        // Rotate in direction of shooting
+        projectile->SetRotation(player->GetRotation() + (270 * glm::pi<float>() / 180));
+        game_objects_.insert(game_objects_.end() - 1, projectile);
     }
 }
 

@@ -24,4 +24,8 @@ void main()
     }
 
     gl_FragColor = color;
+
+    if (color.a < 1.0) {
+        discard;
+    }
 }
