@@ -69,6 +69,9 @@ namespace game {
             // Get vector pointing to the right side of the game object
             glm::vec3 GetRight(void) const;
 
+            // Get hit pts
+            int getHitPoints() const { return hit_points_; }
+
             // Setters
             inline void SetPosition(const glm::vec3& position) { position_ = position; }
             void SetScale(float s);
