@@ -133,8 +133,10 @@ void Game::SetupGameWorld(void)
     game_objects_.push_back(gun);
 
     // Create UI
-    GameObject* circle = new DrawingGameObject(glm::vec3(-2.0f, 1.0f, 0.0f), sprite_, &drawing_shader_, tex_[11]);
-    game_objects_.push_back(circle);
+    /*GameObject* circle = new DrawingGameObject(glm::vec3(-2.0f, 1.0f, 0.0f), sprite_, &drawing_shader_, tex_[11]);
+    game_objects_.push_back(circle);*/
+    GameObject* circle2 = new GameObject(glm::vec3(-2.0f, 1.0f, 0.0f), sprite_, &drawing_shader_, tex_[tex_howl], tex_[tex_howl], -1);
+    game_objects_.push_back(circle2);
 
     // Setup background
     // In this specific implementation, the background is always the

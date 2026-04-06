@@ -14,11 +14,16 @@ void main()
     gl_FragColor = color;
 
     // If the fragment is not on the shape, make it transparent
+
+    max(abs(uv_interp.x), abs(uv_interp.y)) <= 1.0;
+
+    /*
     vec2 coord = uv_interp - vec2(0.5, 0.5);
     float r = 0.3;
     if (length(coord) > r){
         color.a = 0.0;
     }
+    */
     
 
     // Check for transparency
