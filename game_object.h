@@ -21,7 +21,8 @@ namespace game {
 		CollectibleGun,
 		CollectibleKey,
         Projectile,
-        Wall
+        Wall,
+        Text
     };
 
     /*

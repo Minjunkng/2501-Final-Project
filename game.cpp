@@ -22,6 +22,7 @@
 #include "particle_system.h"
 #include "blade_game_object.h"
 #include "user_interface_game_object.h"
+#include "text_game_object.h"
 
 #include "timer.h"
 
@@ -149,6 +150,8 @@ void Game::SetupGameWorld(void)
     GameObject* health_bar = new BladeGameObject(player, health_offset, sprite_, &health_bar_shader_, tex_[0], tex_[0], glm::radians(0.0f));
     game_objects_.push_back(health_bar);
     health_bar->SetScale(0.7);
+
+    GameObject* text = new TextGameObject(player, health_offset, sprite_, &text_shader_, tex_[tex_text_font]);
 
     // Setup background
     // In this specific implementation, the background is always the
@@ -538,7 +541,7 @@ void Game::Init(void)
     // Initialize shaders
     sprite_shader_.Init((resources_directory_g+std::string("/sprite_vertex_shader.glsl")).c_str(), (resources_directory_g+std::string("/sprite_fragment_shader.glsl")).c_str());
     health_bar_shader_.Init((resources_directory_g + std::string("/sprite_vertex_shader.glsl")).c_str(), (resources_directory_g + std::string("/health_fragment_shader.glsl")).c_str());
-    text_shader.Init((resources_directory_g + std::string("/sprite_vertex_shader.glsl")).c_str(), (resources_directory_g + std::string("/text_fragment_shader.glsl")).c_str());
+    text_shader_.Init((resources_directory_g + std::string("/sprite_vertex_shader.glsl")).c_str(), (resources_directory_g + std::string("/text_fragment_shader.glsl")).c_str());
 
     // Initialize time
     current_time_ = 0.0;

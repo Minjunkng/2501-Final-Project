@@ -98,7 +98,7 @@ namespace game {
             Shader health_bar_shader_;
 
             // Shader for text
-            Shader text_shader;
+            Shader text_shader_;
 
             // References to textures
             // This needs to be a pointer
