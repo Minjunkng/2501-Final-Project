@@ -20,6 +20,7 @@
 #include "wall_game_object.h"
 #include "particle_system.h"
 #include "blade_game_object.h"
+#include "user_interface_game_object.h"
 
 #include "timer.h"
 
@@ -136,6 +137,12 @@ void Game::SetupGameWorld(void)
 
     GameObject* supa = new EnemyGameObjectStationary(glm::vec3(2.0f, 0.0f, 0.0f), sprite_, &sprite_shader_, tex_[tex_fenrir], tex_[tex_explosion], 1);
     game_objects_.push_back(supa);
+
+    // Setup UI
+    glm::vec3 health_offset = glm::vec3(-4.6f, 3.3f, 0.0f);
+    GameObject* health_bar = new BladeGameObject(player, health_offset, sprite_, &health_bar_shader_, tex_[0], tex_[0], glm::radians(0.0f));
+    game_objects_.push_back(health_bar);
+    health_bar->SetScale(0.7);
 
     // Setup background
     // In this specific implementation, the background is always the
@@ -393,9 +400,18 @@ void Game::Render(void){
     for (int i = 0; i < game_objects_.size(); i++) {
 
         GameObject* obj = game_objects_[i];
+        PlayerGameObject* player = dynamic_cast<PlayerGameObject*>(game_objects_[0]);
 
         // Enable shader BEFORE setting uniforms
         sprite_shader_.Enable();
+        health_bar_shader_.Enable();
+
+        // Health bar
+        float player_health;
+        if (player->getHitPoints() == 3) { player_health = 4.0f; }
+        else if (player->getHitPoints() == 2) { player_health = 2.0f; }
+        else if (player->getHitPoints() == 1) { player_health = 1.0f; }
+        health_bar_shader_.SetUniform1f("bar_length", player_health);
 
         // Background = last object
         if (i == game_objects_.size() - 1) {
@@ -515,6 +531,9 @@ void Game::Init(void)
 
     // Initialize sprite shader
     sprite_shader_.Init((resources_directory_g+std::string("/sprite_vertex_shader.glsl")).c_str(), (resources_directory_g+std::string("/sprite_fragment_shader.glsl")).c_str());
+
+    // Initialize health bar shader
+    health_bar_shader_.Init((resources_directory_g + std::string("/sprite_vertex_shader.glsl")).c_str(), (resources_directory_g + std::string("/health_fragment_shader.glsl")).c_str());
 
     // Initialize time
     current_time_ = 0.0;
