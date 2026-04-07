@@ -24,6 +24,8 @@ namespace game {
 
             void FurryToggle();
 
+            int GetNumKeys() const;
+
             GameObjectType GetType(void) override;
         private:
             int items_collected_;

@@ -72,6 +72,10 @@ namespace game {
         }
     }
 
+    int PlayerGameObject::GetNumKeys() const {
+        return keys_collected_;
+    }
+
     bool PlayerGameObject::isFurry() {
         return isFurryEnabled_;
     }

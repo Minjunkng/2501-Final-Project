@@ -163,11 +163,23 @@ void Game::SetupGameWorld(void)
     time_text->SetScale(1.2f, 0.35f);
     game_objects_.push_back(time_text);
 
-    glm::vec3 timer_offset = glm::vec3(-1.4f, 3.6f, 0.0f);
+    glm::vec3 timer_offset = glm::vec3(-1.43f, 3.59f, 0.0f);
     TextGameObject* countdown = new TextGameObject(player, timer_offset, sprite_, &text_shader_, tex_[tex_text_font]);
     countdown->SetScale(0.7f, 0.35f);
     game_objects_.push_back(countdown);
     timer_text_ = countdown;
+
+    glm::vec3 keys_text_offset = glm::vec3(0.25f, 3.6f, 0.0f);
+    TextGameObject* keys_text = new TextGameObject(player, keys_text_offset, sprite_, &text_shader_, tex_[tex_text_font]);
+    keys_text->SetScale(1.2f, 0.35f);
+    keys_text->SetText("Keys:");
+    game_objects_.push_back(keys_text);
+
+    glm::vec3 keys_offset = glm::vec3(1.1f, 3.59f, 0.0f);
+    TextGameObject* num_keys = new TextGameObject(player, keys_offset, sprite_, &text_shader_, tex_[tex_text_font]);
+    num_keys->SetScale(0.3f, 0.35f);
+    game_objects_.push_back(num_keys);
+    num_keys_text_ = num_keys;
 
     // Setup background
     // In this specific implementation, the background is always the
@@ -332,10 +344,16 @@ void Game::HandleControls(double delta_time)
 
 void Game::Update(double delta_time)
 {
+    PlayerGameObject* player = dynamic_cast<PlayerGameObject*>(game_objects_[0]);
+
     // Update countdown timer
     int sec_remaining = std::ceil(game_timer_.GetRemaining());
     std::string sec_string = std::to_string(sec_remaining);
     timer_text_->SetText(sec_string + "s");
+
+    // Update keys collected
+    std::string keys_string = std::to_string(player->GetNumKeys());
+    num_keys_text_->SetText(keys_string);
     
     //Checks if each object currently exists, and removing if needed
     bool player_exists = true;

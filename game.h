@@ -73,6 +73,8 @@ namespace game {
             Timer game_timer_;
             TextGameObject* timer_text_;
 
+            TextGameObject* num_keys_text_;
+
             void HandleCollision(GameObject* a, GameObject* b);
             bool Game::RayCircleIntersect(
                 float ox, float oy,     // ray origin
