@@ -397,7 +397,10 @@ void Game::Update(double delta_time)
     //If the player no longer exits, ends the game
     if (!player_exists || game_timer_.Finished()) {
         std::cout << "GAME OVER\n" << std::endl;
-
+        glfwSetWindowShouldClose(window_, true);
+    }
+    else if (player->GetNumKeys() == 3) {
+        std::cout << "YOU WON" << std::endl;
         glfwSetWindowShouldClose(window_, true);
     }
 
