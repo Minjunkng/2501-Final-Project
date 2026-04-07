@@ -49,6 +49,7 @@ namespace game {
 
             Timer entity_spawn_timer_;
             GLuint stationary_entity_tex_;
+            GLuint boxy_entity_tex_;
             GLuint collectible_entity_tex_;
             GLuint enemy_entity_tex_;
             GLuint entity_explosion_tex_;
@@ -74,7 +75,6 @@ namespace game {
             TextGameObject* timer_text_;
 
             TextGameObject* num_keys_text_;
-            TextGameObject* loss_text_;
 
             void HandleCollision(GameObject* a, GameObject* b);
             bool Game::RayCircleIntersect(

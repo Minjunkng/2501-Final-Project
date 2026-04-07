@@ -73,7 +73,8 @@ void Game::SetupGameWorld(void)
         tex_key = 14,
 		tex_fenrir = 15, 
 		tex_diamond_red = 16,
-        tex_text_font = 17
+        tex_text_font = 17,
+        tex_cloud = 18
          };
     // Add the textures in the same order as the enum above
     textures.push_back("/textures/airplane.png"); 
@@ -94,6 +95,7 @@ void Game::SetupGameWorld(void)
     textures.push_back("/textures/fenrir_wolf.png");
     textures.push_back("/textures/diamond_red.png");
     textures.push_back("/textures/text_font.png");
+    textures.push_back("/textures/pinkcloud.png");
     // Load all the textures
     LoadTextures(textures);
 
@@ -139,10 +141,10 @@ void Game::SetupGameWorld(void)
     GameObject* gun = new CollectibleGameObjectGun(glm::vec3(2.0f, -2.0f, 0.0f), sprite_, &sprite_shader_, tex_[tex_howl], tex_[tex_explosion], 1);
     game_objects_.push_back(gun);
 
-    GameObject* supa = new EnemyGameObjectStationary(glm::vec3(2.0f, 0.0f, 0.0f), sprite_, &sprite_shader_, tex_[tex_fenrir], tex_[tex_explosion], 1);
+    GameObject* supa = new EnemyGameObjectStationary(glm::vec3(-6.0f, 0.0f, 0.0f), sprite_, &sprite_shader_, tex_[tex_fenrir], tex_[tex_explosion], 1);
     game_objects_.push_back(supa);
 
-    GameObject* ssupa = new EnemyGameObjectBoxy(glm::vec3(2.0f, 0.0f, 0.0f), sprite_, &sprite_shader_, tex_[tex_fenrir], tex_[tex_explosion], 1);
+    GameObject* ssupa = new EnemyGameObjectBoxy(glm::vec3(2.0f, 0.0f, 0.0f), sprite_, &sprite_shader_, tex_[tex_cloud], tex_[tex_explosion], 1);
     game_objects_.push_back(ssupa);
 
     // Setup UI
@@ -179,11 +181,6 @@ void Game::SetupGameWorld(void)
     num_keys_text_->SetScale(0.3f, 0.35f);
     game_objects_.push_back(num_keys_text_);
 
-    glm::vec3 lose_offset = glm::vec3(0.0f, 0.0f, 0.0f);
-    loss_text_ = new TextGameObject(player, lose_offset, sprite_, &text_shader_, tex_[tex_text_font]);
-    loss_text_->SetScale(1.2f, 0.35f);
-    game_objects_.push_back(loss_text_);
-
     // Setup background
     // In this specific implementation, the background is always the
     // last object
@@ -194,7 +191,8 @@ void Game::SetupGameWorld(void)
     game_objects_.push_back(background);
 
     //Setting up the tex for enemies and explosion for future enemy generation
-    stationary_entity_tex_ = tex_[tex_ufo];
+    stationary_entity_tex_ = tex_[tex_fenrir];
+    boxy_entity_tex_ = tex_[tex_cloud];
     collectible_entity_tex_ = tex_[tex_collectible];
     enemy_entity_tex_ = tex_[tex_enemy];
     entity_explosion_tex_ = tex_[tex_explosion];
@@ -400,10 +398,7 @@ void Game::Update(double delta_time)
     if (!player_exists || game_timer_.Finished()) {
         std::cout << "GAME OVER\n" << std::endl;
 
-        // Loss screen
-        loss_text_->SetText("Game Over");
-
-        //glfwSetWindowShouldClose(window_, true);
+        glfwSetWindowShouldClose(window_, true);
     }
 
     // Update current game time
@@ -412,7 +407,9 @@ void Game::Update(double delta_time)
     //Spawns copies
     if (entity_spawn_timer_.Finished()) {
         SpawnEntity('E');
-        entity_spawn_timer_.Start(10.0);
+        SpawnEntity('S');
+        SpawnEntity('B');
+        entity_spawn_timer_.Start(5.0);
     }
 }
 
@@ -698,7 +695,7 @@ void Game::SpawnEntity(char type)
         halfH = aspect / camera_zoom_;
     }
 
-    float x = RandFloat(-halfW + 0.5f, halfW - 0.5f);
+    float x = RandFloat(-2 * halfW, 2 * halfW);
     float y = RandFloat(-halfH + 0.5f, halfH - 3.0f);
 
 
@@ -713,8 +710,13 @@ void Game::SpawnEntity(char type)
         game_objects_.insert(game_objects_.end() - 1, entity);
     }
     else if (type == 'S') {
-        GameObject* entity = new GameObject(glm::vec3(x, y, 0.0f), sprite_, &sprite_shader_, stationary_entity_tex_, entity_explosion_tex_, 1);
-        game_objects_.insert(game_objects_.end() - 1, entity);
+        GameObject* supa = new EnemyGameObjectStationary(glm::vec3(x, y, 0.0f), sprite_, &sprite_shader_, stationary_entity_tex_, entity_explosion_tex_, 1);
+        game_objects_.insert(game_objects_.end() - 1, supa);
+    }
+    else if (type == 'B') {
+        GameObject* ssupa = new EnemyGameObjectBoxy(glm::vec3(x, y, 0.0f), sprite_, &sprite_shader_, boxy_entity_tex_, entity_explosion_tex_, 1);
+        ssupa->SetScale(0.8f);
+        game_objects_.insert(game_objects_.end() - 1, ssupa);
     }
     else if(type == 'E'){
         auto* enemy = new EnemyGameObject(
