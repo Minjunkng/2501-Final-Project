@@ -147,7 +147,7 @@ void Game::SetupGameWorld(void)
 
     // Setup UI
     glm::vec3 health_offset = glm::vec3(-4.83f, 3.0f, 0.0f);
-    GameObject* health_bar = new BladeGameObject(player, health_offset, sprite_, &health_bar_shader_, tex_[0], tex_[0], glm::radians(0.0f));
+    UserInterfaceGameObject* health_bar = new UserInterfaceGameObject(player, health_offset, sprite_, &health_bar_shader_, tex_[0]);
     health_bar->SetScale(0.7);
     game_objects_.push_back(health_bar);
 
@@ -164,10 +164,9 @@ void Game::SetupGameWorld(void)
     game_objects_.push_back(time_text);
 
     glm::vec3 timer_offset = glm::vec3(-1.43f, 3.59f, 0.0f);
-    TextGameObject* countdown = new TextGameObject(player, timer_offset, sprite_, &text_shader_, tex_[tex_text_font]);
-    countdown->SetScale(0.7f, 0.35f);
-    game_objects_.push_back(countdown);
-    timer_text_ = countdown;
+    timer_text_ = new TextGameObject(player, timer_offset, sprite_, &text_shader_, tex_[tex_text_font]);
+    timer_text_->SetScale(0.7f, 0.35f);
+    game_objects_.push_back(timer_text_);
 
     glm::vec3 keys_text_offset = glm::vec3(0.25f, 3.6f, 0.0f);
     TextGameObject* keys_text = new TextGameObject(player, keys_text_offset, sprite_, &text_shader_, tex_[tex_text_font]);
@@ -176,10 +175,14 @@ void Game::SetupGameWorld(void)
     game_objects_.push_back(keys_text);
 
     glm::vec3 keys_offset = glm::vec3(1.1f, 3.59f, 0.0f);
-    TextGameObject* num_keys = new TextGameObject(player, keys_offset, sprite_, &text_shader_, tex_[tex_text_font]);
-    num_keys->SetScale(0.3f, 0.35f);
-    game_objects_.push_back(num_keys);
-    num_keys_text_ = num_keys;
+    num_keys_text_ = new TextGameObject(player, keys_offset, sprite_, &text_shader_, tex_[tex_text_font]);
+    num_keys_text_->SetScale(0.3f, 0.35f);
+    game_objects_.push_back(num_keys_text_);
+
+    glm::vec3 lose_offset = glm::vec3(0.0f, 0.0f, 0.0f);
+    loss_text_ = new TextGameObject(player, lose_offset, sprite_, &text_shader_, tex_[tex_text_font]);
+    loss_text_->SetScale(1.2f, 0.35f);
+    game_objects_.push_back(loss_text_);
 
     // Setup background
     // In this specific implementation, the background is always the
@@ -396,7 +399,11 @@ void Game::Update(double delta_time)
     //If the player no longer exits, ends the game
     if (!player_exists || game_timer_.Finished()) {
         std::cout << "GAME OVER\n" << std::endl;
-        glfwSetWindowShouldClose(window_, true);
+
+        // Loss screen
+        loss_text_->SetText("Game Over");
+
+        //glfwSetWindowShouldClose(window_, true);
     }
 
     // Update current game time
@@ -844,8 +851,12 @@ void Game::HandleCollision(GameObject* a, GameObject* b) {
     float r = r1 + r2;
 
     if (dx * dx + dy * dy <= r * r) {
-        bool a_is_enemy = (a->GetType() == GameObjectType::Enemy);
-        bool b_is_enemy = (b->GetType() == GameObjectType::Enemy);
+        bool a_is_enemy = (a->GetType() == GameObjectType::Enemy
+                            || a->GetType() == GameObjectType::EnemyBoxy
+                            || a->GetType() == GameObjectType::EnemyStationary);
+        bool b_is_enemy = (b->GetType() == GameObjectType::Enemy
+                            || b->GetType() == GameObjectType::EnemyBoxy
+                            || b->GetType() == GameObjectType::EnemyStationary);
         bool a_is_player = (a->GetType() == GameObjectType::Player);
         bool b_is_player = (b->GetType() == GameObjectType::Player);
 

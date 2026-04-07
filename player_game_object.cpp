@@ -39,7 +39,10 @@ namespace game {
 
     //Collide function
     void PlayerGameObject::collide(GameObject* collided_with) {
-        if (collided_with->GetType() == GameObjectType::Enemy && !invincible_) {
+        if ((collided_with->GetType() == GameObjectType::Enemy
+            || collided_with->GetType() == GameObjectType::EnemyBoxy
+            || collided_with->GetType() == GameObjectType::EnemyStationary)
+            && !invincible_) {
             hit_points_ -= 1;
             if (hit_points_ == 0) {
                 texture_ = destroy_texture_;

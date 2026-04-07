@@ -68,6 +68,8 @@ void main()
     } else {
         // Show the texture
         // Sample texture
+        discard;
+        /*
         vec4 color = texture2D(onetex, uv_interp);
 
         // Assign color to fragment
@@ -78,5 +80,6 @@ void main()
         {
              discard;
         }
+        */
     }
 }

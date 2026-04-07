@@ -45,7 +45,6 @@ namespace game {
                 texture_ = destroy_texture_;
                 scale_ = glm::vec2(1.5f, 1.5f);
                 interactable_ = false;
-                exploded_ = true;
             }
             //5 second explosion timer, only triggers if hp == 0 as well
             timer_.Start(5);

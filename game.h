@@ -74,6 +74,7 @@ namespace game {
             TextGameObject* timer_text_;
 
             TextGameObject* num_keys_text_;
+            TextGameObject* loss_text_;
 
             void HandleCollision(GameObject* a, GameObject* b);
             bool Game::RayCircleIntersect(
