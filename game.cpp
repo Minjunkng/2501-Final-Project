@@ -146,12 +146,16 @@ void Game::SetupGameWorld(void)
     game_objects_.push_back(ssupa);
 
     // Setup UI
-    glm::vec3 health_offset = glm::vec3(-4.6f, 3.3f, 0.0f);
+    glm::vec3 health_offset = glm::vec3(-4.83f, 3.0f, 0.0f);
     GameObject* health_bar = new BladeGameObject(player, health_offset, sprite_, &health_bar_shader_, tex_[0], tex_[0], glm::radians(0.0f));
-    game_objects_.push_back(health_bar);
     health_bar->SetScale(0.7);
+    game_objects_.push_back(health_bar);
 
-    GameObject* text = new TextGameObject(player, health_offset, sprite_, &text_shader_, tex_[tex_text_font]);
+    glm::vec3 health_text_offset = glm::vec3(-4.5f, 3.6f, 0.0f);
+    TextGameObject* health_text = new TextGameObject(player, health_text_offset, sprite_, &text_shader_, tex_[tex_text_font]);
+    health_text->SetText("HEALTH");
+    health_text->SetScale(1.4f, 0.35f);
+    game_objects_.push_back(health_text);
 
     // Setup background
     // In this specific implementation, the background is always the
