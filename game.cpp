@@ -153,7 +153,7 @@ void Game::SetupGameWorld(void)
 
     glm::vec3 health_text_offset = glm::vec3(-4.5f, 3.6f, 0.0f);
     TextGameObject* health_text = new TextGameObject(player, health_text_offset, sprite_, &text_shader_, tex_[tex_text_font]);
-    health_text->SetText("HEALTH");
+    health_text->SetText("Health");
     health_text->SetScale(1.4f, 0.35f);
     game_objects_.push_back(health_text);
 

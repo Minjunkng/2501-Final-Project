@@ -32,7 +32,13 @@ void main()
         // to the x texture coordinate
         int string_index = int(floor(uv_interp.x*float(text_len)));
         // Get the character code
-        int char_index = text_content[string_index] - 39;
+        int char = text_content[string_index];
+        int char_offset;
+
+        if (char >= 65 && char <= 90) char_offset = 39; // uppercase
+        else if (char >= 97 && char <= 122) char_offset = 71; // lowercase
+        else if (char >= 48 && char <= 57) char_offset = -4; // numbers
+        int char_index = char - char_offset;
 
         // Get character's row and column in the font texture
         int row = char_index / num_columns;
