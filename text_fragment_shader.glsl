@@ -38,6 +38,7 @@ void main()
         if (char >= 65 && char <= 90) char_offset = 39; // uppercase
         else if (char >= 97 && char <= 122) char_offset = 71; // lowercase
         else if (char >= 48 && char <= 57) char_offset = -4; // numbers
+        else if (char == 58) char_offset = -7; // colon
         int char_index = char - char_offset;
 
         // Get character's row and column in the font texture

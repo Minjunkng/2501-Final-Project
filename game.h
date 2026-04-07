@@ -11,6 +11,7 @@
 #include "shader.h"
 #include "game_object.h"
 #include "particle_system.h"
+#include "text_game_object.h"
 
 namespace game {
 
@@ -70,6 +71,7 @@ namespace game {
             Timer toggle_timer_;
 
             Timer game_timer_;
+            TextGameObject* timer_text_;
 
             void HandleCollision(GameObject* a, GameObject* b);
             bool Game::RayCircleIntersect(

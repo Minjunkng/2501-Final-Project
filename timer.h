@@ -14,9 +14,11 @@ namespace game {
             // Start the timer NOW and end it in "delay" seconds from now
             // The delay can include a fractional part, e.g, 1.5 seconds
             void Start(double delay); 
-
+            
             // Check if timer has finished
             bool Finished(void) const;
+
+            double GetRemaining(void) const;
 
         private:
             double end_time_;

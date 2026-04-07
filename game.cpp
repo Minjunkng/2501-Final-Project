@@ -157,6 +157,18 @@ void Game::SetupGameWorld(void)
     health_text->SetScale(1.4f, 0.35f);
     game_objects_.push_back(health_text);
 
+    glm::vec3 time_text_offset = glm::vec3(-2.5f, 3.6f, 0.0f);
+    TextGameObject* time_text = new TextGameObject(player, time_text_offset, sprite_, &text_shader_, tex_[tex_text_font]);
+    time_text->SetText("Time:");
+    time_text->SetScale(1.2f, 0.35f);
+    game_objects_.push_back(time_text);
+
+    glm::vec3 timer_offset = glm::vec3(-1.4f, 3.6f, 0.0f);
+    TextGameObject* countdown = new TextGameObject(player, timer_offset, sprite_, &text_shader_, tex_[tex_text_font]);
+    countdown->SetScale(0.7f, 0.35f);
+    game_objects_.push_back(countdown);
+    timer_text_ = countdown;
+
     // Setup background
     // In this specific implementation, the background is always the
     // last object
@@ -320,6 +332,11 @@ void Game::HandleControls(double delta_time)
 
 void Game::Update(double delta_time)
 {
+    // Update countdown timer
+    int sec_remaining = std::ceil(game_timer_.GetRemaining());
+    std::string sec_string = std::to_string(sec_remaining);
+    timer_text_->SetText(sec_string + "s");
+    
     //Checks if each object currently exists, and removing if needed
     bool player_exists = true;
     for (size_t i = 0; i < game_objects_.size(); ) {
