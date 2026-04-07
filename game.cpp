@@ -81,7 +81,7 @@ void Game::SetupGameWorld(void)
     textures.push_back("/textures/orb.png");
     textures.push_back("/textures/landscape.png");
     textures.push_back("/textures/explosion2.png");
-    textures.push_back("/textures/bullet.png");
+    textures.push_back("/textures/potion.png");
     textures.push_back("/textures/robotgunner.png");
     textures.push_back("/textures/player_invincible.png");
     textures.push_back("/textures/laserBullet.png");
@@ -702,6 +702,7 @@ void Game::SpawnEntity(char type)
         game_objects_.insert(game_objects_.end() - 1, key_piece);
     } else if (type == 'C') {
         GameObject* entity = new CollectibleGameObject(glm::vec3(x, y, 0.0f), sprite_, &sprite_shader_, collectible_entity_tex_, entity_explosion_tex_, 1);
+        entity->SetScale(0.8f);
         game_objects_.insert(game_objects_.end() - 1, entity);
     }
     else if (type == 'S') {
