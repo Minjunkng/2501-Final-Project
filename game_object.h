@@ -72,6 +72,8 @@ namespace game {
 
             // Get hit pts
             int getHitPoints() const { return hit_points_; }
+            
+            bool HasExploded() const { return exploded_; }
 
             // Setters
             inline void SetPosition(const glm::vec3& position) { position_ = position; }
@@ -106,6 +108,7 @@ namespace game {
             Timer timer_;
 
             bool interactable_;
+            bool exploded_;
 
     }; // class GameObject
 

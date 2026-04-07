@@ -80,7 +80,7 @@ void Game::SetupGameWorld(void)
     textures.push_back("/textures/robotgunner.png");
     textures.push_back("/textures/orb.png");
     textures.push_back("/textures/landscape.png");
-    textures.push_back("/textures/explosion.png");
+    textures.push_back("/textures/explosion2.png");
     textures.push_back("/textures/bullet.png");
     textures.push_back("/textures/robotgunner.png");
     textures.push_back("/textures/player_invincible.png");
@@ -248,6 +248,9 @@ void Game::HandleControls(double delta_time)
     // Terrain parameters
     float terrain_height = -2.1f;
 
+    // Stop player movement after dying
+    if (player->HasExploded()) return;
+
     glm::vec2 mouse;
     if (GetMousePosition(mouse)) {
         // Player position in 2D (same plane as mouse)
@@ -360,6 +363,7 @@ void Game::Update(double delta_time)
     for (size_t i = 0; i < game_objects_.size(); ) {
 
         if (!game_objects_[i]->return_exist()) {
+
             if (i == 0) {
                 player_exists = false;
             }
@@ -376,8 +380,8 @@ void Game::Update(double delta_time)
         // Get the current game object
         GameObject* current_game_object = game_objects_[i];
 
-        // Update the current game object
-        current_game_object->Update(delta_time);
+        // Update the current game object if not exploded
+        if (!current_game_object->HasExploded()) { current_game_object->Update(delta_time); }
 
         // Check for collision with other game objects
         //

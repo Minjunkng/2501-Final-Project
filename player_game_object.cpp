@@ -44,6 +44,7 @@ namespace game {
             if (hit_points_ == 0) {
                 texture_ = destroy_texture_;
                 interactable_ = false;
+                exploded_ = true;
             }
             timer_.Start(5);
         }

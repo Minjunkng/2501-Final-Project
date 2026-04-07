@@ -21,6 +21,7 @@ GameObject::GameObject(const glm::vec3 &position, Geometry *geom, Shader *shader
     hit_points_ = hit_points;
     Timer* timer_ = new Timer();
     interactable_ = true;
+    exploded_ = false;
 }
 
 bool GameObject::return_interactable(void) {

@@ -18,6 +18,7 @@ namespace game {
             hit_points_ -= 1;
             if (hit_points_ <= 0) {
                 texture_ = destroy_texture_;
+                scale_ = glm::vec2(1.5f, 1.5f);
                 interactable_ = false;
             }
             timer_.Start(5);
