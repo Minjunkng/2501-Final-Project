@@ -90,7 +90,7 @@ void Game::SetupGameWorld(void)
     textures.push_back("/textures/blade.png");
     textures.push_back("/textures/snow.png");
     textures.push_back("/textures/howl.png");
-    textures.push_back("/textures/pinkcloud.png");
+    textures.push_back("/textures/key.png");
     textures.push_back("/textures/fenrir_wolf.png");
     textures.push_back("/textures/diamond_red.png");
     textures.push_back("/textures/text_font.png");
@@ -698,6 +698,7 @@ void Game::SpawnEntity(char type)
     //Logic to check which entity to generate(C used to be the enemies from last assignment but were revamped into E)
     if (type == 'K') {
         GameObject* key_piece = new CollectibleGameObjectKey(glm::vec3(x, -0.5f, 0.0f), sprite_, &sprite_shader_, collectible_key_tex_, entity_explosion_tex_, 1);
+        key_piece->SetScale(0.7f);
         game_objects_.insert(game_objects_.end() - 1, key_piece);
     } else if (type == 'C') {
         GameObject* entity = new CollectibleGameObject(glm::vec3(x, y, 0.0f), sprite_, &sprite_shader_, collectible_entity_tex_, entity_explosion_tex_, 1);
