@@ -140,4 +140,8 @@ namespace game {
         }
     }
 
+    glm::vec3 PlayerGameObject::GetVelocity() const {
+        return velocity_;
+    }
+
 } // namespace game

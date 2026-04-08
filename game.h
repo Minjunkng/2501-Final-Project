@@ -54,6 +54,7 @@ namespace game {
 			GLuint collectible_key_tex_;
             GLuint projectile_tex_;
 			GLuint tex_diamond_red_;
+			GLuint tex_fenrir_;
             void SpawnEntity(char);
 
             Geometry* particle_geometry_;

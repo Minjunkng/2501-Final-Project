@@ -25,6 +25,8 @@ namespace game {
             void FurryToggle();
 
             GameObjectType GetType(void) override;
+
+            glm::vec3 GetVelocity() const;
         private:
             int items_collected_;
             int keys_collected_;
@@ -46,6 +48,7 @@ namespace game {
 
             GLuint base_texture_;
             void UpdateTexture();
+
     }; // class PlayerGameObject
 
 

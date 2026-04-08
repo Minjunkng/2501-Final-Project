@@ -23,8 +23,10 @@
 #include "blade_game_object.h"
 #include "user_interface_game_object.h"
 #include "text_game_object.h"
+#include <glm/gtx/norm.hpp>
 
 #include "timer.h"
+#include <unordered_map>
 
 #include <random>
 
@@ -139,12 +141,6 @@ void Game::SetupGameWorld(void)
     GameObject* gun = new CollectibleGameObjectGun(glm::vec3(2.0f, -2.0f, 0.0f), sprite_, &sprite_shader_, tex_[tex_howl], tex_[tex_explosion], 1);
     game_objects_.push_back(gun);
 
-    GameObject* supa = new EnemyGameObjectStationary(glm::vec3(2.0f, 0.0f, 0.0f), sprite_, &sprite_shader_, tex_[tex_fenrir], tex_[tex_explosion], 1);
-    game_objects_.push_back(supa);
-
-    GameObject* ssupa = new EnemyGameObjectBoxy(glm::vec3(2.0f, 0.0f, 0.0f), sprite_, &sprite_shader_, tex_[tex_fenrir], tex_[tex_explosion], 1);
-    game_objects_.push_back(ssupa);
-
     // Setup UI
     glm::vec3 health_offset = glm::vec3(-4.6f, 3.3f, 0.0f);
     GameObject* health_bar = new BladeGameObject(player, health_offset, sprite_, &health_bar_shader_, tex_[0], tex_[0], glm::radians(0.0f));
@@ -170,6 +166,7 @@ void Game::SetupGameWorld(void)
 	collectible_key_tex_ = tex_[tex_key];
     projectile_tex_ = tex_[tex_projectile];
 	tex_diamond_red_ = tex_[tex_diamond_red];
+	tex_fenrir_ = tex_[tex_fenrir];
 
     //Generate the collectibles)(5)
     for (int i = 0;i < 5;i++) {
@@ -340,6 +337,47 @@ void Game::Update(double delta_time)
         // Update the current game object
         current_game_object->Update(delta_time);
 
+        EnemyGameObjectBoxy* boxy = dynamic_cast<EnemyGameObjectBoxy*>(current_game_object);
+        if (boxy != nullptr) {
+
+            GameObject* player = game_objects_[0];
+
+            glm::vec3 enemy_pos = boxy->GetPosition();
+            glm::vec3 player_pos = player->GetPosition();
+
+            float trigger_radius = 2.0f;
+
+            // check if player is close enough
+            if (glm::length2(player_pos - enemy_pos) <= trigger_radius * trigger_radius) {
+
+                // simple cooldown using static map or timer substitute
+                static std::unordered_map<EnemyGameObjectBoxy*, double> shoot_timers;
+
+                shoot_timers[boxy] -= delta_time;
+
+                if (shoot_timers[boxy] <= 0.0) {
+
+                    shoot_timers[boxy] = 1.5; // fire every 1.5 seconds
+
+                    glm::vec3 direction = glm::normalize(player_pos - enemy_pos);
+                    glm::vec3 spawn_pos = enemy_pos + direction * 0.6f;
+
+                    ProjectileObject* projectile = new ProjectileObject(
+                        spawn_pos,
+                        sprite_,
+                        &sprite_shader_,
+                        projectile_tex_,
+                        direction
+                    );
+
+                    projectile->SetRotation(atan2(direction.y, direction.x) + (270 * glm::pi<float>() / 180));
+                    projectile->SetSpeed(8.0f);
+
+                    game_objects_.insert(game_objects_.end() - 1, projectile);
+                }
+            }
+        }
+
         // Check for collision with other game objects
         //
         // Note the loop bounds: we avoid testing the last object since
@@ -361,7 +399,9 @@ void Game::Update(double delta_time)
 
     //Spawns copies
     if (entity_spawn_timer_.Finished()) {
-        SpawnEntity('E');
+        //SpawnEntity('E');
+        SpawnEntity('ES');
+        SpawnEntity('EB');
         entity_spawn_timer_.Start(10.0);
     }
 }
@@ -673,6 +713,29 @@ void Game::SpawnEntity(char type)
             entity_explosion_tex_,
             1
         );
+
+        // Give enemy access to the player 
+        enemy->SetPlayer(game_objects_[0]);
+
+        // Patrol ellipse: center at spawn, with some size
+        enemy->SetPatrolEllipse(glm::vec3(x, y, 0.0f), 3.0f, 1.5f);
+        enemy->SetPatrolAngularSpeed(1.2f);
+        enemy->SetInterceptTriggerRadius(2.0f);
+        enemy->SetDesiredInterceptTime(2.0f);
+        enemy->SetCourseCorrectionPeriod(2.0f);
+
+        game_objects_.insert(game_objects_.end() - 1, enemy);
+    }
+    else if (type == 'ES') {
+        auto* enemy = new EnemyGameObjectStationary(glm::vec3(x, -2.0f, 0.0f), sprite_, &sprite_shader_, tex_fenrir_, entity_explosion_tex_, 1);
+
+        // Give enemy access to the player 
+        enemy->SetPlayer(game_objects_[0]);
+
+        game_objects_.insert(game_objects_.end() - 1, enemy);
+    }
+    else if (type == 'EB') {
+        auto* enemy = new EnemyGameObjectBoxy(glm::vec3(x, -1.0f, 0.0f), sprite_, &sprite_shader_, entity_explosion_tex_, entity_explosion_tex_, 1);
 
         // Give enemy access to the player 
         enemy->SetPlayer(game_objects_[0]);
