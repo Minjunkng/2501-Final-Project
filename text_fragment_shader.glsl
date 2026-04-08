@@ -1,80 +1,60 @@
-// Source code of fragment shader
 #version 130
 
-// Attributes passed from the vertex shader
 in vec4 color_interp;
 in vec2 uv_interp;
 
-// Texture sampler
 uniform sampler2D onetex;
 
-// Configuration of the font texture
-// Number of characters per row
 const int num_columns = 10;
-// Number of rows in the texture
 const int num_rows = 9;
-// Size of a character in texture units
-float char_width = 1/float(num_columns);
-float char_height = 1/float(num_rows);
 
-// Text input
+float char_width = 1.0 / float(num_columns);
+float char_height = 1.0 / float(num_rows);
+
 uniform int text_len;
 uniform int text_content[40];
 
-
 void main()
 {
-    // Check if we are writing on this sprite
-    if (text_len > 0){
-        // Find which character we are writing in the block covered by
-        // this fragment
-        // Get the index of the character in the text string according
-        // to the x texture coordinate
-        int string_index = int(floor(uv_interp.x*float(text_len)));
-        // Get the character code
-        int char = text_content[string_index];
-        int char_offset;
+    if (text_len > 0) {
 
-        if (char >= 65 && char <= 90) char_offset = -25; // uppercase
-        else if (char >= 97 && char <= 122) char_offset = 71; // lowercase
-        else if (char >= 48 && char <= 57) char_offset = -4; // numbers
-        else if (char == 58) char_offset = -7; // colon
-        int char_index = char - char_offset;
+        int string_index = int(floor(uv_interp.x * float(text_len)));
 
-        // Get character's row and column in the font texture
+        int ch = text_content[string_index];
+        int char_offset = 0;
+
+        if (ch >= 65 && ch <= 90) char_offset = -25;       // uppercase
+        else if (ch >= 97 && ch <= 122) char_offset = 71;  // lowercase
+        else if (ch >= 48 && ch <= 57) char_offset = -4;   // numbers
+        else if (ch == 58) char_offset = -7;               // colon
+
+        int char_index = ch - char_offset;
+
         int row = char_index / num_columns;
-        int col = char_index - row*num_columns;
+        int col = char_index - row * num_columns;
 
-        // Map the fragment texture coordinates to a value between 0 and
-        // 1 for a character
         vec2 cuv;
-        cuv.x = uv_interp.x*float(text_len) - float(string_index) ;
+        cuv.x = uv_interp.x * float(text_len) - float(string_index);
         cuv.y = uv_interp.y;
-        // Map the value between 0 and 1 to a coordinate in the font
-        // texture
-        vec2 fuv;
-        fuv.x = (cuv.x + col)*char_width;
-        fuv.y = (cuv.y + row)*char_height;
-        // Draw character
-        vec4 color = texture2D(onetex, fuv);
-        gl_FragColor = vec4(color.r, color.g, color.b, color.a);
 
-        //Check for transparency
-        if (color.a < 1.0)
-        {
-             discard;
+        vec2 fuv;
+        fuv.x = (cuv.x + float(col)) * char_width;
+        fuv.y = (cuv.y + float(row)) * char_height;
+
+        vec4 color = texture2D(onetex, fuv);
+        gl_FragColor = color;
+
+        if (color.a < 1.0) {
+            discard;
         }
 
     } else {
+
         vec4 color = texture2D(onetex, uv_interp);
+        gl_FragColor = color;
 
-        // Assign color to fragment
-        gl_FragColor = vec4(color.r, color.g, color.b, color.a);
-
-        // Check for transparency
-        if(color.a < 1.0)
-        {
-             discard;
+        if (color.a < 1.0) {
+            discard;
         }
     }
 }

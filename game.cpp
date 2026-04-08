@@ -81,7 +81,7 @@ void Game::SetupGameWorld(void)
     // Add the textures in the same order as the enum above
     textures.push_back("/textures/airplane.png"); 
     textures.push_back("/textures/robotgunner.png");
-    textures.push_back("/textures/orb.png");
+    textures.push_back("/textures/robotgunner.png");
     textures.push_back("/textures/landscape.png");
     textures.push_back("/textures/explosion2.png");
     textures.push_back("/textures/potion.png");
@@ -143,8 +143,17 @@ void Game::SetupGameWorld(void)
     GameObject* gun = new CollectibleGameObjectGun(glm::vec3(2.0f, -2.0f, 0.0f), sprite_, &sprite_shader_, tex_[tex_howl], tex_[tex_explosion], 1);
     game_objects_.push_back(gun);
 
-    GameObject* supa = new EnemyGameObjectStationary(glm::vec3(-6.0f, 0.0f, 0.0f), sprite_, &sprite_shader_, tex_[tex_fenrir], tex_[tex_explosion], 1);
-    game_objects_.push_back(supa);
+    EnemyGameObjectStationary* enemy = new EnemyGameObjectStationary(glm::vec3(-6.0f, 0.0f, 0.0f), sprite_, &sprite_shader_, tex_[tex_fenrir], tex_[tex_explosion], 1);
+
+    enemy->SetPlayer(game_objects_[0]);
+
+    // Patrol ellipse: center at spawn, with some size
+    enemy->SetPatrolEllipse(glm::vec3(-2.0f, -2.0f, 0.0f), 3.0f, 1.5f);
+    enemy->SetPatrolAngularSpeed(0.0f);
+    enemy->SetInterceptTriggerRadius(2.0f);
+    enemy->SetDesiredInterceptTime(0.00001f);
+    enemy->SetCourseCorrectionPeriod(0.01f);
+    game_objects_.push_back(enemy);
 
     GameObject* ssupa = new EnemyGameObjectBoxy(glm::vec3(2.0f, 0.0f, 0.0f), sprite_, &sprite_shader_, tex_[tex_cloud], tex_[tex_explosion], 1);
     game_objects_.push_back(ssupa);
@@ -483,7 +492,10 @@ void Game::Render(void){
 
     // Set view to zoom out, centered by default at 0,0
     // Get player (always index 0)
-    GameObject* player = game_objects_[0];
+    GameObject* player = nullptr;
+    if (!game_objects_.empty()) {
+        player = dynamic_cast<PlayerGameObject*>(game_objects_[0]);
+    }
     glm::vec3 player_pos = player->GetPosition();
 
     // Camera follows player → translate world in opposite direction
@@ -513,9 +525,12 @@ void Game::Render(void){
 
         // Health bar
         float player_health = 0.0f;
-        if (player->getHitPoints() == 3) { player_health = 4.0f; }
-        else if (player->getHitPoints() == 2) { player_health = 2.0f; }
-        else if (player->getHitPoints() == 1) { player_health = 1.0f; }
+        if (player != nullptr) { // Safety Check
+            int hp = player->getHitPoints();
+            if (hp == 3) { player_health = 4.0f; }
+            else if (hp == 2) { player_health = 2.0f; }
+            else if (hp == 1) { player_health = 1.0f; }
+        }
         health_bar_shader_.SetUniform1f("bar_length", player_health);
 
         // Background = last object
@@ -757,7 +772,12 @@ void Game::SpawnEntity(char type)
         game_objects_.insert(game_objects_.end() - 1, entity);
     }
     else if (type == 'S') {
-        GameObject* supa = new EnemyGameObjectStationary(glm::vec3(x, y, 0.0f), sprite_, &sprite_shader_, stationary_entity_tex_, entity_explosion_tex_, 1);
+        EnemyGameObjectStationary* supa = new EnemyGameObjectStationary(glm::vec3(x, y, 0.0f), sprite_, &sprite_shader_, stationary_entity_tex_, entity_explosion_tex_, 1);
+        supa->SetPatrolEllipse(glm::vec3(-2.0f, -2.0f, 0.0f), 3.0f, 1.5f);
+        supa->SetPatrolAngularSpeed(0.0f);
+        supa->SetInterceptTriggerRadius(2.0f);
+        supa->SetDesiredInterceptTime(0.00001f);
+        supa->SetCourseCorrectionPeriod(0.01f);
         game_objects_.insert(game_objects_.end() - 1, supa);
     }
     else if (type == 'B') {
@@ -774,29 +794,6 @@ void Game::SpawnEntity(char type)
             entity_explosion_tex_,
             1
         );
-
-        // Give enemy access to the player 
-        enemy->SetPlayer(game_objects_[0]);
-
-        // Patrol ellipse: center at spawn, with some size
-        enemy->SetPatrolEllipse(glm::vec3(x, y, 0.0f), 3.0f, 1.5f);
-        enemy->SetPatrolAngularSpeed(1.2f);
-        enemy->SetInterceptTriggerRadius(2.0f);
-        enemy->SetDesiredInterceptTime(2.0f);
-        enemy->SetCourseCorrectionPeriod(2.0f);
-
-        game_objects_.insert(game_objects_.end() - 1, enemy);
-    }
-    else if (type == 'ES') {
-        auto* enemy = new EnemyGameObjectStationary(glm::vec3(x, -2.0f, 0.0f), sprite_, &sprite_shader_, tex_fenrir_, entity_explosion_tex_, 1);
-
-        // Give enemy access to the player 
-        enemy->SetPlayer(game_objects_[0]);
-
-        game_objects_.insert(game_objects_.end() - 1, enemy);
-    }
-    else if (type == 'EB') {
-        auto* enemy = new EnemyGameObjectBoxy(glm::vec3(x, -1.0f, 0.0f), sprite_, &sprite_shader_, entity_explosion_tex_, entity_explosion_tex_, 1);
 
         // Give enemy access to the player 
         enemy->SetPlayer(game_objects_[0]);
