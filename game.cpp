@@ -961,6 +961,24 @@ void Game::HandleCollision(GameObject* a, GameObject* b) {
             game_objects_.insert(game_objects_.end() - 1, explosion);
         }
 
+        // Case 3: Player and Collectible Gun
+        bool a_is_gun = (a->GetType() == GameObjectType::CollectibleGun); // Adjust if your enum name differs
+        bool b_is_gun = (b->GetType() == GameObjectType::CollectibleGun);
+
+        if ((a_is_player && b_is_gun) || (b_is_player && a_is_gun)) {
+            glm::vec3 explosion_pos = a_is_gun ? a->GetPosition() : b->GetPosition();
+
+            ExplosionParticles* explosion = new ExplosionParticles(
+                explosion_pos,
+                sprite_,
+                &sprite_shader_,
+                2000, // number of particles
+                projectile_tex_
+            );
+
+            game_objects_.insert(game_objects_.end() - 1, explosion);
+        }
+
         a->collide(b);
         b->collide(a);
     }

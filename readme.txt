@@ -1,39 +1,60 @@
-Minjun Kang
-101306107
+Minjun Kang + Amanda Lee
+101306107 + 101349677
 
-1.1 Continuous scrolling is enabled, character is rooted at center of screen
+1.0 Game Mechanics:
+Has a meaningful gameplay(enemies, powerups, life total) and meaningful finishing condition. Fulfills minimum 0.25 pts, 
+and in addtion has 3 keys(specific item to be collected, item count to be achieved, and target locations to attack(enemies))
 
-2.1 Background is now tiled, and is not too distorted. Note that while the background covers a large space, 
-if a player goes too far out of bounds, it will result in a blue background. however, it would take a while.
+2.0 Enemies:
+- 2.1 Enemy Textures:
+A Wolf sprite(Same as invincible texture for the player), a fog cloud, and a robot gunner for 3 unique enemy types. 
+Each enemy type has a unique texture, and the player can distinguish between them visually.
+- 2.2 Enemy Behaviors:
+Wolf: A melee enemy that chases the player when within a certain range. Uses chase behavior with very 
+little time between readjusting, so will follow the player similar to pursuit. Unique attack is a suicide bite.
 
-3.1 Game object main class now can be toggled into a "ghost mode" by using a ghost attribute, which modifies the pixel shader to render in grayscale.
+Cloud: A evil fog that follows a fixed back and forth pattern. Uses no special abilities, and follows a basic movement pattern. 
+Unique attack is a dash attack.
 
-3.2 If the player object consumes 3 consumables(bullets), this will transition the player sprite into ghost mode(greyscale). Note that
-since the collectibles spawn at random places, the player may spawn on top of a collectible, which will cause the player to immediately consume
-the colectible, contributing to the count.
+Robot: A robot enemy that wanders in an elliptical motion, and can switch into a chase mode when player approaches 
+a set distance from robot. Unique attack is a slow charge. 
 
-4.1 Created a particle system class, with a inherited class ExplosionParticles. after a certain time(3 seconds) the particles object which holds
-all of the projectiles will be set to dissapear.
+3.0 Weapons:
+Weapon 1: Shoots a red diamond at a slow fire rate. The default weapon.
+Weapon 2: After obtaining the brown dog upgrade, can toggle P to switch into dog mode, showing a 
+higher energy blast gun which has a faster travel rate. Has a small chance to insta blow up an enemy.
 
-4.2 after a certain time(1 second), the explosion particles will be converted from the original texture to "ghost mode", ie greyscale. This 
-results in a darker texture over time, and as the original explosion texture is a intense color at start, this fulfills the requirement of 
-"The particles start with an intense color and become darker over time".
+4.9 Collectible Items:
+4.1: A dog collectible represents a upgrade that allows the player to switch between dog form and airplane form for different 
+weapons. a set of 3 keys is also a type of collectible as the main objective of the game.
+4.2: A power up flask collectible also exists in the game. If 5 are collected, the player becomes super charged, becoming 
+invincible for a short duration. the texture changes to reflect that.
 
-4.3 explosion particles are spawned when player hits a enemy, and also did the bonus where shooting a enemy also causes the explosion particles to spawn.
+5.0 Movement:
+5.1: Movement is handled through transformations.
+5.2 The Player uses physics based movement(i.e with gravity) and other objects may use parametric based equations.
 
-5.1 SnowParticles inherits particle system, and spawns snow particles at random locations on the screen. The particles will fall downwards, 
-and will be recycled after a period of time. Note that the snow particles will be spawned at random locations, and variable speeds(some are way slower than others).
+6.0 Collisions:
+Collision detection for everything. Player collides with enemies and collectibles. Enemies collide with the player.
 
-5.2 Particles are small white-ish blue-ish circles, see the snow.png in textures. Although the particles are a bit squareish, hopefully it 
-stil looks like snow(At least hail right?).
+7.0 Game World:
+7.1: Can scroll to the side(by moving) to a larger game world.
+7.2: Texture is crated using texture tiling.
 
-6.1 Blade rotates over time at a certain fixed position adjacent to the player helicopter sprite.
+8.0 Particles:
+Explosion particles when enemies die.
+Energy Particles when Player gets dog weapon upgrade.
 
-6.2 The blade sprite transforms relative to the helicopter using a hierarchical transformation, so that the blade appears to be attached to the helicopter
-when the helicopter moves.
+9.0 UI:
+9.1: A health bar that shows the player's current health. A timer that shows how long the player 
+has left to win. And a counter for how many keys the player has collected.
 
-7.1 Got this Readme lol
+10 Advanced Method: 
+Enemy Pursuit mechanics as an advanced steering method
 
-7.2 Commented througout the project
+11 Documentation:
+Code is commented and Readme is provided.
 
-Note: Sorry for the really ugly game lmao, and since past requirements aren't being marked hopefully the jank rotations and projectile connections don't count.
+Bonus:
+Second Advanced method for a bonus 0.5 pts: Collision handling for the Player uses rebound mechanics(There is an air wall)
+
