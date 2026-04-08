@@ -24,6 +24,8 @@ namespace game {
 
             void FurryToggle();
 
+            int GetNumKeys() const;
+
             GameObjectType GetType(void) override;
 
             glm::vec3 GetVelocity() const;

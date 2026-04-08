@@ -75,15 +75,16 @@ void Game::SetupGameWorld(void)
         tex_key = 14,
 		tex_fenrir = 15, 
 		tex_diamond_red = 16,
-        tex_text_font = 17
+        tex_text_font = 17,
+        tex_cloud = 18
          };
     // Add the textures in the same order as the enum above
     textures.push_back("/textures/airplane.png"); 
     textures.push_back("/textures/robotgunner.png");
     textures.push_back("/textures/orb.png");
     textures.push_back("/textures/landscape.png");
-    textures.push_back("/textures/explosion.png");
-    textures.push_back("/textures/bullet.png");
+    textures.push_back("/textures/explosion2.png");
+    textures.push_back("/textures/potion.png");
     textures.push_back("/textures/robotgunner.png");
     textures.push_back("/textures/player_invincible.png");
     textures.push_back("/textures/laserBullet.png");
@@ -92,10 +93,11 @@ void Game::SetupGameWorld(void)
     textures.push_back("/textures/blade.png");
     textures.push_back("/textures/snow.png");
     textures.push_back("/textures/howl.png");
-    textures.push_back("/textures/pinkcloud.png");
+    textures.push_back("/textures/key.png");
     textures.push_back("/textures/fenrir_wolf.png");
     textures.push_back("/textures/diamond_red.png");
     textures.push_back("/textures/text_font.png");
+    textures.push_back("/textures/pinkcloud.png");
     // Load all the textures
     LoadTextures(textures);
 
@@ -141,13 +143,45 @@ void Game::SetupGameWorld(void)
     GameObject* gun = new CollectibleGameObjectGun(glm::vec3(2.0f, -2.0f, 0.0f), sprite_, &sprite_shader_, tex_[tex_howl], tex_[tex_explosion], 1);
     game_objects_.push_back(gun);
 
-    // Setup UI
-    glm::vec3 health_offset = glm::vec3(-4.6f, 3.3f, 0.0f);
-    GameObject* health_bar = new BladeGameObject(player, health_offset, sprite_, &health_bar_shader_, tex_[0], tex_[0], glm::radians(0.0f));
-    game_objects_.push_back(health_bar);
-    health_bar->SetScale(0.7);
+    GameObject* supa = new EnemyGameObjectStationary(glm::vec3(-6.0f, 0.0f, 0.0f), sprite_, &sprite_shader_, tex_[tex_fenrir], tex_[tex_explosion], 1);
+    game_objects_.push_back(supa);
 
-    GameObject* text = new TextGameObject(player, health_offset, sprite_, &text_shader_, tex_[tex_text_font]);
+    GameObject* ssupa = new EnemyGameObjectBoxy(glm::vec3(2.0f, 0.0f, 0.0f), sprite_, &sprite_shader_, tex_[tex_cloud], tex_[tex_explosion], 1);
+    game_objects_.push_back(ssupa);
+
+    // Setup UI
+    glm::vec3 health_offset = glm::vec3(-4.83f, 3.0f, 0.0f);
+    UserInterfaceGameObject* health_bar = new UserInterfaceGameObject(player, health_offset, sprite_, &health_bar_shader_, tex_[0]);
+    health_bar->SetScale(0.7);
+    game_objects_.push_back(health_bar);
+
+    glm::vec3 health_text_offset = glm::vec3(-4.5f, 3.6f, 0.0f);
+    TextGameObject* health_text = new TextGameObject(player, health_text_offset, sprite_, &text_shader_, tex_[tex_text_font]);
+    health_text->SetText("Health");
+    health_text->SetScale(1.4f, 0.35f);
+    game_objects_.push_back(health_text);
+
+    glm::vec3 time_text_offset = glm::vec3(-2.5f, 3.6f, 0.0f);
+    TextGameObject* time_text = new TextGameObject(player, time_text_offset, sprite_, &text_shader_, tex_[tex_text_font]);
+    time_text->SetText("Time:");
+    time_text->SetScale(1.2f, 0.35f);
+    game_objects_.push_back(time_text);
+
+    glm::vec3 timer_offset = glm::vec3(-1.43f, 3.59f, 0.0f);
+    timer_text_ = new TextGameObject(player, timer_offset, sprite_, &text_shader_, tex_[tex_text_font]);
+    timer_text_->SetScale(0.7f, 0.35f);
+    game_objects_.push_back(timer_text_);
+
+    glm::vec3 keys_text_offset = glm::vec3(0.25f, 3.6f, 0.0f);
+    TextGameObject* keys_text = new TextGameObject(player, keys_text_offset, sprite_, &text_shader_, tex_[tex_text_font]);
+    keys_text->SetScale(1.2f, 0.35f);
+    keys_text->SetText("Keys:");
+    game_objects_.push_back(keys_text);
+
+    glm::vec3 keys_offset = glm::vec3(1.1f, 3.59f, 0.0f);
+    num_keys_text_ = new TextGameObject(player, keys_offset, sprite_, &text_shader_, tex_[tex_text_font]);
+    num_keys_text_->SetScale(0.3f, 0.35f);
+    game_objects_.push_back(num_keys_text_);
 
     // Setup background
     // In this specific implementation, the background is always the
@@ -159,7 +193,8 @@ void Game::SetupGameWorld(void)
     game_objects_.push_back(background);
 
     //Setting up the tex for enemies and explosion for future enemy generation
-    stationary_entity_tex_ = tex_[tex_ufo];
+    stationary_entity_tex_ = tex_[tex_fenrir];
+    boxy_entity_tex_ = tex_[tex_cloud];
     collectible_entity_tex_ = tex_[tex_collectible];
     enemy_entity_tex_ = tex_[tex_enemy];
     entity_explosion_tex_ = tex_[tex_explosion];
@@ -216,6 +251,9 @@ void Game::HandleControls(double delta_time)
 
     // Terrain parameters
     float terrain_height = -2.1f;
+
+    // Stop player movement after dying
+    if (player->HasExploded()) return;
 
     glm::vec2 mouse;
     if (GetMousePosition(mouse)) {
@@ -313,11 +351,23 @@ void Game::HandleControls(double delta_time)
 
 void Game::Update(double delta_time)
 {
+    PlayerGameObject* player = dynamic_cast<PlayerGameObject*>(game_objects_[0]);
+
+    // Update countdown timer
+    int sec_remaining = std::ceil(game_timer_.GetRemaining());
+    std::string sec_string = std::to_string(sec_remaining);
+    timer_text_->SetText(sec_string + "s");
+
+    // Update keys collected
+    std::string keys_string = std::to_string(player->GetNumKeys());
+    num_keys_text_->SetText(keys_string);
+    
     //Checks if each object currently exists, and removing if needed
     bool player_exists = true;
     for (size_t i = 0; i < game_objects_.size(); ) {
 
         if (!game_objects_[i]->return_exist()) {
+
             if (i == 0) {
                 player_exists = false;
             }
@@ -334,8 +384,8 @@ void Game::Update(double delta_time)
         // Get the current game object
         GameObject* current_game_object = game_objects_[i];
 
-        // Update the current game object
-        current_game_object->Update(delta_time);
+        // Update the current game object if not exploded
+        if (!current_game_object->HasExploded()) { current_game_object->Update(delta_time); }
 
         EnemyGameObjectBoxy* boxy = dynamic_cast<EnemyGameObjectBoxy*>(current_game_object);
         if (boxy != nullptr) {
@@ -393,16 +443,20 @@ void Game::Update(double delta_time)
         std::cout << "GAME OVER\n" << std::endl;
         glfwSetWindowShouldClose(window_, true);
     }
+    else if (player->GetNumKeys() == 3) {
+        std::cout << "YOU WON" << std::endl;
+        glfwSetWindowShouldClose(window_, true);
+    }
 
     // Update current game time
     current_time_ += delta_time;
 
     //Spawns copies
     if (entity_spawn_timer_.Finished()) {
-        //SpawnEntity('E');
-        SpawnEntity('ES');
-        SpawnEntity('EB');
-        entity_spawn_timer_.Start(10.0);
+        SpawnEntity('E');
+        SpawnEntity('S');
+        SpawnEntity('B');
+        entity_spawn_timer_.Start(5.0);
     }
 }
 
@@ -688,21 +742,28 @@ void Game::SpawnEntity(char type)
         halfH = aspect / camera_zoom_;
     }
 
-    float x = RandFloat(-halfW + 0.5f, halfW - 0.5f);
+    float x = RandFloat(-2 * halfW, 2 * halfW);
     float y = RandFloat(-halfH + 0.5f, halfH - 3.0f);
 
 
     //Logic to check which entity to generate(C used to be the enemies from last assignment but were revamped into E)
     if (type == 'K') {
         GameObject* key_piece = new CollectibleGameObjectKey(glm::vec3(x, -0.5f, 0.0f), sprite_, &sprite_shader_, collectible_key_tex_, entity_explosion_tex_, 1);
+        key_piece->SetScale(0.7f);
         game_objects_.insert(game_objects_.end() - 1, key_piece);
     } else if (type == 'C') {
         GameObject* entity = new CollectibleGameObject(glm::vec3(x, y, 0.0f), sprite_, &sprite_shader_, collectible_entity_tex_, entity_explosion_tex_, 1);
+        entity->SetScale(0.8f);
         game_objects_.insert(game_objects_.end() - 1, entity);
     }
     else if (type == 'S') {
-        GameObject* entity = new GameObject(glm::vec3(x, y, 0.0f), sprite_, &sprite_shader_, stationary_entity_tex_, entity_explosion_tex_, 1);
-        game_objects_.insert(game_objects_.end() - 1, entity);
+        GameObject* supa = new EnemyGameObjectStationary(glm::vec3(x, y, 0.0f), sprite_, &sprite_shader_, stationary_entity_tex_, entity_explosion_tex_, 1);
+        game_objects_.insert(game_objects_.end() - 1, supa);
+    }
+    else if (type == 'B') {
+        GameObject* ssupa = new EnemyGameObjectBoxy(glm::vec3(x, y, 0.0f), sprite_, &sprite_shader_, boxy_entity_tex_, entity_explosion_tex_, 1);
+        ssupa->SetScale(0.8f);
+        game_objects_.insert(game_objects_.end() - 1, ssupa);
     }
     else if(type == 'E'){
         auto* enemy = new EnemyGameObject(
@@ -862,8 +923,12 @@ void Game::HandleCollision(GameObject* a, GameObject* b) {
     float r = r1 + r2;
 
     if (dx * dx + dy * dy <= r * r) {
-        bool a_is_enemy = (a->GetType() == GameObjectType::Enemy);
-        bool b_is_enemy = (b->GetType() == GameObjectType::Enemy);
+        bool a_is_enemy = (a->GetType() == GameObjectType::Enemy
+                            || a->GetType() == GameObjectType::EnemyBoxy
+                            || a->GetType() == GameObjectType::EnemyStationary);
+        bool b_is_enemy = (b->GetType() == GameObjectType::Enemy
+                            || b->GetType() == GameObjectType::EnemyBoxy
+                            || b->GetType() == GameObjectType::EnemyStationary);
         bool a_is_player = (a->GetType() == GameObjectType::Player);
         bool b_is_player = (b->GetType() == GameObjectType::Player);
 

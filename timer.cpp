@@ -35,4 +35,10 @@ bool Timer::Finished(void) const
     return (current_time >= end_time_);
 }
 
+double Timer::GetRemaining(void) const
+{
+    double current_time = glfwGetTime();
+    return end_time_ - current_time;
+}
+
 } // namespace game

@@ -32,7 +32,14 @@ void main()
         // to the x texture coordinate
         int string_index = int(floor(uv_interp.x*float(text_len)));
         // Get the character code
-        int char_index = text_content[string_index] - 32; // Map space character to 0
+        int char = text_content[string_index];
+        int char_offset;
+
+        if (char >= 65 && char <= 90) char_offset = -25; // uppercase
+        else if (char >= 97 && char <= 122) char_offset = 71; // lowercase
+        else if (char >= 48 && char <= 57) char_offset = -4; // numbers
+        else if (char == 58) char_offset = -7; // colon
+        int char_index = char - char_offset;
 
         // Get character's row and column in the font texture
         int row = char_index / num_columns;
@@ -42,8 +49,7 @@ void main()
         // 1 for a character
         vec2 cuv;
         cuv.x = uv_interp.x*float(text_len) - float(string_index) ;
-        cuv.y = uv_interp.y + 0.21; 
-        // + 0.21 is to compensate for ascenders and descenders like in "l" and "p"
+        cuv.y = uv_interp.y;
         // Map the value between 0 and 1 to a coordinate in the font
         // texture
         vec2 fuv;
@@ -51,17 +57,15 @@ void main()
         fuv.y = (cuv.y + row)*char_height;
         // Draw character
         vec4 color = texture2D(onetex, fuv);
-        //gl_FragColor = vec4(color.r, color.g, color.b, color.a);
-        gl_FragColor = vec4(color.r, color.g, color.b, 1.0);
+        gl_FragColor = vec4(color.r, color.g, color.b, color.a);
 
-        // Check for transparency
-        /*if(color.a < 1.0)
+        //Check for transparency
+        if (color.a < 1.0)
         {
              discard;
-        }*/
+        }
+
     } else {
-        // Show the texture
-        // Sample texture
         vec4 color = texture2D(onetex, uv_interp);
 
         // Assign color to fragment

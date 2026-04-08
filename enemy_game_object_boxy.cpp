@@ -43,6 +43,7 @@ namespace game {
             //Resets textures
             if (hit_points_ == 0) {
                 texture_ = destroy_texture_;
+                scale_ = glm::vec2(1.5f, 1.5f);
                 interactable_ = false;
             }
             //5 second explosion timer, only triggers if hp == 0 as well
