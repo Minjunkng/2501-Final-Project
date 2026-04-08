@@ -1,6 +1,12 @@
 Minjun Kang + Amanda Lee
 101306107 + 101349677
 
+How to Play:
+
+Use WASD to move, and space to shoot. Collect 3 keys to win with in the provided time limit in the UI. Collect the dog collectible 
+to switch between the default weapon and the dog weapon, and Collect power up flasks to become super charged and invincible for a short duration. Be wary of the
+Dog enemy, the cloud enemy and robot enemy, as they can chase and kill you! You have 3hp.
+
 1.0 Game Mechanics:
 Has a meaningful gameplay(enemies, powerups, life total) and meaningful finishing condition. Fulfills minimum 0.25 pts, 
 and in addtion has 3 keys(specific item to be collected, item count to be achieved, and target locations to attack(enemies))
