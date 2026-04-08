@@ -35,7 +35,7 @@ void main()
         int char = text_content[string_index];
         int char_offset;
 
-        if (char >= 65 && char <= 90) char_offset = 39; // uppercase
+        if (char >= 65 && char <= 90) char_offset = -25; // uppercase
         else if (char >= 97 && char <= 122) char_offset = 71; // lowercase
         else if (char >= 48 && char <= 57) char_offset = -4; // numbers
         else if (char == 58) char_offset = -7; // colon
